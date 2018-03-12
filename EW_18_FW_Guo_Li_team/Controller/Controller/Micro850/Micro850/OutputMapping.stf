@@ -1,0 +1,78 @@
+PROGRAM OutputMapping
+#info= QLD
+BOF
+
+
+(**)
+
+SOR  [0,1] (**) (**)  XIC  [1,0] (*SimulateIO*) (**)  RET [2,0]
+EOR [3,0]
+
+
+(**)
+
+SOR  [0,3] (**) (**)  XIC  [1,0] (*SimulateOutput*) (**)  RET [2,0]
+EOR [3,0]
+
+
+(**)
+
+SOR  [0,5] (**) (**)  XIC  [1,0] (*PTO_A1_B2_Pair*) (**)  OTE  [2,0] (*_IO_EM_DO_00*) (**)
+EOR [3,0]
+
+
+(**)
+
+SOR  [0,7] (**) (**)  XIC  [1,0] (*PTO_A2_B1_Pair*) (**)  OTE  [2,0] (*_IO_EM_DO_01*) (**)
+EOR [3,0]
+
+
+(**)
+
+SOR  [0,9] (**) (**)  XIC  [1,0] (*A1_Ctrl_Pin1*) (**)  OTE  [2,0] (*_IO_EM_DO_06*) (**)
+EOR [3,0]
+
+
+(**)
+
+SOR  [0,11] (**) (**)  XIC  [1,0] (*A1_Ctrl_Pin2*) (**)  OTE  [2,0] (*_IO_EM_DO_07*) (**)
+EOR [3,0]
+
+
+(**)
+
+SOR  [0,13] (**) (**)  XIC  [1,0] (*B2_Ctrl_Pin1*) (**)  OTE  [2,0] (*_IO_EM_DO_08*) (**)
+EOR [3,0]
+
+
+(**)
+
+SOR  [0,15] (**) (**)  XIC  [1,0] (*B2_Ctrl_Pin2*) (**)  OTE  [2,0] (*_IO_EM_DO_09*) (**)
+EOR [3,0]
+
+
+(**)
+
+SOR  [0,17] (**) (**)  XIC  [1,0] (*A2_Ctrl_Pin1*) (**)  OTE  [2,0] (*_IO_EM_DO_10*) (**)
+EOR [3,0]
+
+
+(**)
+
+SOR  [0,19] (**) (**)  XIC  [1,0] (*A2_Ctrl_Pin2*) (**)  OTE  [2,0] (*_IO_EM_DO_11*) (**)
+EOR [3,0]
+
+
+(**)
+
+SOR  [0,21] (**) (**)  XIC  [1,0] (*B1_Ctrl_Pin1*) (**)  OTE  [2,0] (*_IO_EM_DO_12*) (**)
+EOR [3,0]
+
+
+(**)
+
+SOR  [0,23] (**) (**)  XIC  [1,0] (*B1_Ctrl_Pin2*) (**)  OTE  [2,0] (*_IO_EM_DO_13*) (**)
+EOR [3,0]
+EOF
+#end_info
+END_PROGRAM

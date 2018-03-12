@@ -1,0 +1,141 @@
+PROGRAM Initialize
+
+(* Initialize the rotbot here
+	- Set all global variables to initial values so that when controller goes from PROG->RUN, it will start fresh
+	- Start timer here ( ? TBD)
+*)
+
+
+
+IF __SYSVA_FIRST_SCAN THEN 
+	(* First scan *)
+	
+	
+	PTO_A1_B2_Pair := FALSE;
+	PTO_A2_B1_Pair := FALSE;
+	
+	A1_Ctrl_Pin1 := FALSE;
+	A1_Ctrl_Pin2 := FALSE;
+	
+	A2_Ctrl_Pin1 := FALSE;
+	A2_Ctrl_Pin2 := FALSE;
+	
+	B1_Ctrl_Pin1 := FALSE;
+	B1_Ctrl_Pin2 := FALSE;
+	
+	B2_Ctrl_Pin1 := FALSE;
+	B2_Ctrl_Pin2 := FALSE;
+	
+	(* Kepp rotbot on hold position during startup *)
+	CommandedActionForRobot := ACTION_HOLD;
+	
+	(* Set it as not detected *)
+	Boundary_Sensor_B2 := TRUE;
+	Boundary_Sensor_B1 := TRUE;
+	Boundary_Sensor_A1 := TRUE;
+	Boundary_Sensor_A2 := TRUE;
+	
+	Object_Sensor_A1 := FALSE;
+	Object_Sensor_A2 := FALSE;
+	Object_Sensor_B1 := FALSE;
+	Object_Sensor_B2 := FALSE;
+	
+	Ultra_Sensor_B1 := 0;
+	Ultra_Sensor_B2 := 0;
+
+	Axis_A1_B2_Velo := VELOCITY_MAX;
+	Axis_A2_B1_Velo := VELOCITY_MAX;
+	
+	Axis_A1_B2_Duty_Cycle := DUTYCYCLE_DEFAULT;
+	Axis_A2_B1_Duty_Cycle := DUTYCYCLE_DEFAULT;
+	
+	(* Set it as not detected *)
+	Axis_A1_B2_cmd := AXIS_CMD_NONE;
+	Axis_A2_B1_cmd := AXIS_CMD_NONE;
+	
+	SimulateINObjectSensor := FALSE;
+	SimulateINUltraSensor := FALSE;
+	
+	StopSimulation := FALSE;
+	
+	CommandedScenario := INVALID_SCENARIO;
+	
+
+END_IF;
+
+
+(* Check for simulation control variable and act *)
+
+
+IF StopSimulation = TRUE THEN
+	(* Reset Simulation *)
+	SimulateIO := FALSE;
+	
+	SimulateInput := FALSE;
+	SimulateINBoundarySensor := FALSE;
+	SimulateINObjectSensor := FALSE;
+	SimulateINUltraSensor := FALSE;
+	
+	SimulateOutput := FALSE;
+		
+	StopSimulation := FALSE;
+
+END_IF;
+
+
+IF StartInputSimulation = TRUE THEN
+	SimulateInput := TRUE;
+	
+	Boundary_Sensor_A1 := TRUE;
+	Boundary_Sensor_A2 := TRUE;
+	Boundary_Sensor_B1 := TRUE; 
+	Boundary_Sensor_B2 := TRUE;
+	
+	Object_Sensor_A1 := FALSE;
+	Object_Sensor_A2 := FALSE;
+	Object_Sensor_B1 := FALSE;
+	Object_Sensor_B2 := FALSE;
+	
+	Ultra_Sensor_B1 := 0;
+	Ultra_Sensor_B2 := 0;
+	
+	StartInputSimulation := FALSE;
+	
+END_IF;
+
+IF StartBoundarySensorSimulation = TRUE THEN
+
+	SimulateINBoundarySensor := TRUE;
+
+	Boundary_Sensor_A1 := TRUE;
+	Boundary_Sensor_A2 := TRUE;
+	Boundary_Sensor_B1 := TRUE; 
+	Boundary_Sensor_B2 := TRUE;
+
+	StartBoundarySensorSimulation := FALSE;
+END_IF;
+
+IF StartObjSensorSimulation = TRUE THEN
+
+	SimulateINObjectSensor := TRUE;
+
+	
+	Object_Sensor_A1 := FALSE;
+	Object_Sensor_A2 := FALSE;
+	Object_Sensor_B1 := FALSE;
+	Object_Sensor_B2 := FALSE;
+	
+	StartObjSensorSimulation := FALSE;
+	
+END_IF;
+
+IF StartUltraSensorSimulation  = TRUE THEN
+	SimulateINUltraSensor := TRUE;
+	
+	Ultra_Sensor_B1 := 0;
+	Ultra_Sensor_B2 := 0;
+	
+	StartUltraSensorSimulation := FALSE;
+	
+END_IF;
+END_PROGRAM

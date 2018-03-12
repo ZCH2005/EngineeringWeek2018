@@ -1,0 +1,1918 @@
+PROGRAM Scenario_Table_Initialize
+
+IF __SYSVA_FIRST_SCAN THEN 
+
+
+	L_TIME_TO_ROTATE_90 := T#425ms;
+	L_TIME_TO_ROTATE_180 := T#800ms;
+	L_TIME_TO_ROTATE_270 := T#1100ms;
+	L_TIME_TO_ROTATE_360 := T#1300ms;
+	
+	L_TIME_ONE_BOUNDARY := T#500ms;
+	L_TIME_SEARCH_HOLD := T#500ms;
+	
+	L_TIME_ONE_B_ONE_O := T#500ms;
+	
+	L_TableIndex := 0;
+	(* Initilaize Hash table for scenarios *)
+	
+	(* SCENARIO START *)
+	// Id - 0
+	Scen_table[L_TableIndex].Id := L_TableIndex;
+	Scen_table[L_TableIndex].Priority := 1;
+	Scen_table[L_TableIndex].Name := 'No seansors detected';
+					
+		L_ActionIndex :=  0;        
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_DO_NOTING;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := T#800ms;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MIN; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+
+		L_ActionIndex :=  L_ActionIndex + 1;        
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_ROTATE_LEFT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_TO_ROTATE_180;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MIN; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+
+
+		L_ActionIndex :=  L_ActionIndex + 1;              
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_HOLD;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_SEARCH_HOLD;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MIN; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+
+		L_ActionIndex :=  L_ActionIndex + 1;              
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_ROTATE_RIGHT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_TO_ROTATE_180;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MIN; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+
+		L_ActionIndex :=  L_ActionIndex + 1;              
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_HOLD;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_SEARCH_HOLD;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+					
+	Scen_table[L_TableIndex].NumOfActions := L_ActionIndex + 1;
+	L_TableIndex := L_TableIndex + 1;
+	(* SCENARIO END *)                       
+
+	(*
+	  INPUTS:               0 Object, 0 Boundary
+	  ACTION:     Searching, 90 degrees rotate left and right, rotation should be non-interruptible      
+	  Id = 1
+	*)
+	
+	(* SCENARIO START *)   
+	Scen_table[L_TableIndex].Id := L_TableIndex;
+	Scen_table[L_TableIndex].Priority := 200;
+	Scen_table[L_TableIndex].Name := 'Fast Searching';
+					
+		L_ActionIndex :=  0;        
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_ROTATE_LEFT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_TO_ROTATE_90;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MIN; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+
+		L_ActionIndex :=  L_ActionIndex + 1;              
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_HOLD;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_SEARCH_HOLD;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+
+		L_ActionIndex :=  L_ActionIndex + 1;              
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_ROTATE_RIGHT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_TO_ROTATE_90;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MIN; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+
+		L_ActionIndex :=  L_ActionIndex + 1;              
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_HOLD;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_SEARCH_HOLD;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+
+	Scen_table[L_TableIndex].NumOfActions := L_ActionIndex + 1;
+	L_TableIndex := L_TableIndex + 1;
+	
+	(* SCENARIO END *)       
+	
+	
+	// BB1 -> Front Boundary Sensor
+	// BA1 -> Right Boundary Sensor
+	// BB2 -> Back Boundary Sensor
+	// BA2 -> Left Boundary Sensor
+	
+	
+	//////////////////  1 Boundary, 0 object  ///////////////////////////////
+	(* 
+		INPUTS: Front Side Detects Boundary, No Object Detected
+					ACTION: (Move Backward, rotate left and rotate right) / (keep previous state) 
+		Id = 2
+	*)
+	
+	// SCENARIO START 
+	Scen_table[L_TableIndex].Id := L_TableIndex;
+	Scen_table[L_TableIndex].Priority := SCEN_PRIORITY_1_B;
+	Scen_table[L_TableIndex].Name := 'SENSOR_DETECTED_BB1';
+		
+		L_ActionIndex :=  0;        
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_MOVE_BACKWARD;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_ONE_BOUNDARY;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+		
+		L_ActionIndex :=  L_ActionIndex + 1;                      
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_ROTATE_LEFT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_TO_ROTATE_90;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+
+		L_ActionIndex :=  L_ActionIndex + 1;              
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_ROTATE_RIGHT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_TO_ROTATE_90;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+		
+		L_ActionIndex :=  L_ActionIndex + 1;              
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_HOLD;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_SEARCH_HOLD;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+
+	Scen_table[L_TableIndex].NumOfActions := L_ActionIndex + 1;
+	L_TableIndex := L_TableIndex + 1;
+	
+	// SCENARIO END 
+	
+	
+	(* 
+		INPUTS: Right Side Detects Boundary, No Object Detected
+					ACTION: (Move left, rotate left and rotate right) / (keep previous state) 
+		Id = 3
+	*)
+					
+	// SCENARIO START 
+	Scen_table[L_TableIndex].Id := L_TableIndex;
+	Scen_table[L_TableIndex].Priority := SCEN_PRIORITY_1_B;
+	Scen_table[L_TableIndex].Name := 'SENSOR_DETECTED_BA1';
+					
+		L_ActionIndex :=  0;        
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_MOVE_LEFT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_ONE_BOUNDARY;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+		
+		L_ActionIndex :=  L_ActionIndex + 1;                      
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_ROTATE_LEFT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_TO_ROTATE_90;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+
+		L_ActionIndex :=  L_ActionIndex + 1;              
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_ROTATE_RIGHT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_TO_ROTATE_90;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+					
+		L_ActionIndex :=  L_ActionIndex + 1;              
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_HOLD;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_SEARCH_HOLD;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+
+	Scen_table[L_TableIndex].NumOfActions := L_ActionIndex + 1;
+	L_TableIndex := L_TableIndex + 1;
+	
+	// SCENARIO END 
+	
+	
+	(* 
+		INPUTS: Back Side Detects Boundary, No Object Detected
+					ACTION: (Move forward, rotate left and rotate right) / (keep previous state) 
+		Id = 4
+	*)
+	
+	// SCENARIO START 
+	Scen_table[L_TableIndex].Id := L_TableIndex;
+	Scen_table[L_TableIndex].Priority := SCEN_PRIORITY_1_B;
+	Scen_table[L_TableIndex].Name := 'SENSOR_DETECTED_BB2';
+					
+		L_ActionIndex :=  0;        
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_MOVE_FORWARD;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_ONE_BOUNDARY;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+		
+		L_ActionIndex :=  L_ActionIndex + 1;                      
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_ROTATE_LEFT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_TO_ROTATE_90;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+
+		L_ActionIndex :=  L_ActionIndex + 1;              
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_ROTATE_RIGHT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_TO_ROTATE_90;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+					
+		L_ActionIndex :=  L_ActionIndex + 1;              
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_HOLD;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_SEARCH_HOLD;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+
+	Scen_table[L_TableIndex].NumOfActions := L_ActionIndex + 1;
+	L_TableIndex := L_TableIndex + 1;
+	
+	// SCENARIO END 
+	
+	
+	(* 
+		INPUTS: Left Side Detects Boundary, No Object Detected
+					ACTION: (Move right, rotate left and rotate right) / (keep previous state) 
+		Id = 5
+	*)
+
+	// SCENARIO START 
+	Scen_table[L_TableIndex].Id := L_TableIndex;
+	Scen_table[L_TableIndex].Priority := SCEN_PRIORITY_1_B;
+	Scen_table[L_TableIndex].Name := 'SENSOR_DETECTED_BA2';
+					
+		L_ActionIndex :=  0;        
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_MOVE_RIGHT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_ONE_BOUNDARY;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+		
+		L_ActionIndex :=  L_ActionIndex + 1;                      
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_ROTATE_LEFT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_TO_ROTATE_90;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+
+		L_ActionIndex :=  L_ActionIndex + 1;              
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_ROTATE_RIGHT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_TO_ROTATE_90;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+		
+		L_ActionIndex :=  L_ActionIndex + 1;              
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_HOLD;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_SEARCH_HOLD;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+		
+
+	Scen_table[L_TableIndex].NumOfActions := L_ActionIndex + 1;
+	L_TableIndex := L_TableIndex + 1;
+	
+	// SCENARIO END 
+	
+	
+	
+	 ///////////////// 0 Object, 2 Boundary       (Move opposite to boundary, rotate left and rotate right) ///////////
+	
+	
+	(* 
+		INPUTS: Front & Right  Sides Detect Boundary Detects Boundary, No Object Detected
+					ACTION:Move Left, Rotate Left, Rotate Right
+		Id = 6
+	*)
+	
+	// SCENARIO START 
+	Scen_table[L_TableIndex].Id := L_TableIndex;
+	Scen_table[L_TableIndex].Priority := SCEN_PRIORITY_2_B;
+	Scen_table[L_TableIndex].Name := 'SENSOR_DETECTED_BB1_BA1';
+					
+		L_ActionIndex :=  0;        
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_MOVE_LEFT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_ONE_BOUNDARY;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+		
+		L_ActionIndex :=  L_ActionIndex + 1;                      
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_ROTATE_LEFT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_TO_ROTATE_180;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+
+		L_ActionIndex :=  L_ActionIndex + 1;              
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_ROTATE_RIGHT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_TO_ROTATE_180;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+					
+		L_ActionIndex :=  L_ActionIndex + 1;              
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_HOLD;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_SEARCH_HOLD;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+
+	Scen_table[L_TableIndex].NumOfActions := L_ActionIndex + 1;
+	L_TableIndex := L_TableIndex + 1;
+	
+	// SCENARIO END 
+	
+	
+	
+	(* 
+		INPUTS: Back & Right  Sides Detect Boundary Detects Boundary, No Object Detected
+					ACTION: Move Front, Rotate Left, Rotate Right
+		Id = 7
+	*)
+
+					
+	// SCENARIO START 
+	Scen_table[L_TableIndex].Id := L_TableIndex;
+	Scen_table[L_TableIndex].Priority := SCEN_PRIORITY_2_B;
+	Scen_table[L_TableIndex].Name := 'SENSOR_DETECTED_BB2_BA1';
+					
+		L_ActionIndex :=  0;        
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_MOVE_FORWARD;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_ONE_BOUNDARY;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+		
+		L_ActionIndex :=  L_ActionIndex + 1;                      
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_ROTATE_LEFT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_TO_ROTATE_90;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+
+		L_ActionIndex :=  L_ActionIndex + 1;              
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_ROTATE_RIGHT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_TO_ROTATE_90;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+		
+		L_ActionIndex :=  L_ActionIndex + 1;              
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_HOLD;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_SEARCH_HOLD;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+		
+
+	Scen_table[L_TableIndex].NumOfActions := L_ActionIndex + 1;
+	L_TableIndex := L_TableIndex + 1;
+	
+	// SCENARIO END 
+	
+	
+	(* 
+		INPUTS: Back & Left  Sides Detect Boundary Detects Boundary, No Object Detected
+					ACTION: Move Right, Rotate Left, Rotate Right
+		Id = 8
+	*)
+
+	// SCENARIO START 
+	Scen_table[L_TableIndex].Id := L_TableIndex;
+	Scen_table[L_TableIndex].Priority := SCEN_PRIORITY_2_B;
+	Scen_table[L_TableIndex].Name := 'SENSOR_DETECTED_BB2_BA2';
+					
+		L_ActionIndex :=  0;        
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_MOVE_RIGHT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_ONE_BOUNDARY;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+		
+		L_ActionIndex :=  L_ActionIndex + 1;                      
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_ROTATE_LEFT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_TO_ROTATE_90;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+
+		L_ActionIndex :=  L_ActionIndex + 1;              
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_ROTATE_RIGHT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_TO_ROTATE_90;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+					
+		
+		L_ActionIndex :=  L_ActionIndex + 1;              
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_HOLD;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_SEARCH_HOLD;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+		
+
+	Scen_table[L_TableIndex].NumOfActions := L_ActionIndex + 1;
+	L_TableIndex := L_TableIndex + 1;
+	
+	// SCENARIO END 
+	
+	
+	
+	(* 
+		INPUTS: Front & Left  Sides Detect Boundary Detects Boundary, No Object Detected
+					ACTION: Move Back, Rotate Left, Rotate Right
+		Id = 9
+	*)
+	
+	// SCENARIO START 
+	Scen_table[L_TableIndex].Id := L_TableIndex;
+	Scen_table[L_TableIndex].Priority := SCEN_PRIORITY_2_B;
+	Scen_table[L_TableIndex].Name := 'SENSOR_DETECTED_BB1_BA2';
+					
+		L_ActionIndex :=  0;        
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_MOVE_BACKWARD;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_ONE_BOUNDARY;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+		
+		L_ActionIndex :=  L_ActionIndex + 1;                      
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_ROTATE_LEFT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_TO_ROTATE_90;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+
+		L_ActionIndex :=  L_ActionIndex + 1;              
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_ROTATE_RIGHT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_TO_ROTATE_90;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+					
+		L_ActionIndex :=  L_ActionIndex + 1;              
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_HOLD;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_SEARCH_HOLD;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+
+	Scen_table[L_TableIndex].NumOfActions := L_ActionIndex + 1;
+	L_TableIndex := L_TableIndex + 1;
+	
+	// SCENARIO END 
+	
+
+	
+	
+	(* SCENARIO START *)
+	
+	// Id - 70
+	L_TableIndex := 70;
+	
+	(* 1 Object,  0 Boundary
+		SENSOR_DETECTED_OA1 	*) 
+	
+	Scen_table[L_TableIndex].Id := L_TableIndex;
+	Scen_table[L_TableIndex].Priority := SCEN_PRIORITY_1_O;
+	Scen_table[L_TableIndex].Name := 'SENSOR_DETECTED_OA1';
+		
+		L_ActionIndex :=  0;	
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_ROTATE_RIGHT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_TO_ROTATE_90;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+		
+		L_ActionIndex :=  L_ActionIndex + 1;	
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_MOVE_FORWARD;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := T#200ms;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;	
+		
+	Scen_table[L_TableIndex].NumOfActions := L_ActionIndex + 1;
+	L_TableIndex := L_TableIndex + 1;
+	(* SCENARIO END *)		
+	
+	(* SCENARIO START *)
+	// Id - 71
+	
+	(* 1 Object,  0 Boundary
+		SENSOR_DETECTED_OA2  *) 
+	
+	Scen_table[L_TableIndex].Id := L_TableIndex;
+	Scen_table[L_TableIndex].Priority := 190;
+	Scen_table[L_TableIndex].Name := 'SENSOR_DETECTED_OA2';
+		
+		L_ActionIndex :=  0;	
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_ROTATE_LEFT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_TO_ROTATE_90;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+		
+		L_ActionIndex :=  L_ActionIndex + 1;	
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_MOVE_FORWARD;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := T#200ms;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;		
+
+	Scen_table[L_TableIndex].NumOfActions := L_ActionIndex + 1;
+	L_TableIndex := L_TableIndex + 1;
+	(* SCENARIO END *)			
+	
+	(* SCENARIO START *)
+	// Id - 72
+	
+	(* 1 Object,  0 Boundary
+			SENSOR_DETECTED_OB1	*) 
+	
+	Scen_table[L_TableIndex].Id := L_TableIndex;
+	Scen_table[L_TableIndex].Priority := 191;
+	Scen_table[L_TableIndex].Name := 'SENSOR_DETECTED_OB1';
+		
+		L_ActionIndex :=  0;	
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_MOVE_FORWARD;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := T#400ms;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+
+	Scen_table[L_TableIndex].NumOfActions := L_ActionIndex + 1;
+	L_TableIndex := L_TableIndex + 1;
+	(* SCENARIO END *)	
+	
+	
+	(* SCENARIO START *)
+	// Id - 73
+	
+	(* 1 Object,  0 Boundary
+			SENSOR_DETECTED_OB2	*) 
+	
+	Scen_table[L_TableIndex].Id := L_TableIndex;
+	Scen_table[L_TableIndex].Priority := SCEN_PRIORITY_1_O;
+	Scen_table[L_TableIndex].Name := 'SENSOR_DETECTED_OB2';
+		
+		L_ActionIndex :=  0;	
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_ROTATE_LEFT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_TO_ROTATE_90;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+		
+		L_ActionIndex :=  L_ActionIndex + 1;	
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_HOLD;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := T#5ms;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;		
+
+
+	Scen_table[L_TableIndex].NumOfActions := L_ActionIndex + 1;
+	L_TableIndex := L_TableIndex + 1;
+	(* SCENARIO END *)	
+	
+	
+	
+	(* SCENARIO START *)
+	// Id - 74
+	
+	(* 1 Object, 1 Boundary 
+		SENSOR_DETECTED_BB2_OA1  *) 
+	
+	Scen_table[L_TableIndex].Id := L_TableIndex;
+	Scen_table[L_TableIndex].Priority := SCEN_PRIORITY_1_B_1_O;
+	Scen_table[L_TableIndex].Name := 'SENSOR_DETECTED_BB2_OA1';
+		
+		L_ActionIndex := 0 ;	
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_MOVE_FORWARD;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := T#200ms;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;		
+		
+		L_ActionIndex :=  L_ActionIndex + 1;	
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_ROTATE_RIGHT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_TO_ROTATE_90;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+		
+
+
+	Scen_table[L_TableIndex].NumOfActions := L_ActionIndex + 1;
+	L_TableIndex := L_TableIndex + 1;
+	(* SCENARIO END *)	
+	
+	(* SCENARIO START *)
+	// Id - 75
+			(* 1 Object, 1 Boundary 
+				SENSOR_DETECTED_BB1_OA1  *) 
+	
+	Scen_table[L_TableIndex].Id := L_TableIndex;
+	Scen_table[L_TableIndex].Priority := SCEN_PRIORITY_1_B_1_O;
+	Scen_table[L_TableIndex].Name := 'SENSOR_DETECTED_BB1_OA1';
+		
+		L_ActionIndex :=  0;	
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_MOVE_BW_LEFT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_ONE_B_ONE_O;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+		
+		L_ActionIndex :=  L_ActionIndex + 1;	
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_MOVE_RIGHT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_ONE_B_ONE_O;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+		
+	Scen_table[L_TableIndex].NumOfActions := L_ActionIndex + 1;
+	L_TableIndex := L_TableIndex + 1;
+	(* SCENARIO END *)	
+	
+	(* SCENARIO START *)
+	// Id - 76
+	
+		(* 1 Object, 1 Boundary 
+			SENSOR_DETECTED_BA2_OA1  *) 
+	
+	Scen_table[L_TableIndex].Id := L_TableIndex;
+	Scen_table[L_TableIndex].Priority := SCEN_PRIORITY_1_B_1_O;
+	Scen_table[L_TableIndex].Name := 'SENSOR_DETECTED_BA2_OA1';
+		
+		L_ActionIndex :=  0;	
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_MOVE_BW_RIGHT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_ONE_B_ONE_O;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+		
+	Scen_table[L_TableIndex].NumOfActions := L_ActionIndex + 1;
+	L_TableIndex := L_TableIndex + 1;
+	(* SCENARIO END *)		
+
+
+	(* SCENARIO START *)
+	// Id - 77
+	
+		(* 1 Object, 1 Boundary 
+			SENSOR_DETECTED_BB2_OA2  *) 
+	
+	Scen_table[L_TableIndex].Id := L_TableIndex;
+	Scen_table[L_TableIndex].Priority := SCEN_PRIORITY_1_B_1_O;
+	Scen_table[L_TableIndex].Name := 'SENSOR_DETECTED_BB2_OA2';
+		
+		L_ActionIndex :=  0;	
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_ROTATE_LEFT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_TO_ROTATE_90;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;	
+		
+		L_ActionIndex :=  L_ActionIndex + 1;	
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_HOLD;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := T#5ms;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;				
+
+
+	Scen_table[L_TableIndex].NumOfActions := L_ActionIndex + 1;
+	L_TableIndex := L_TableIndex + 1;
+	(* SCENARIO END *)			
+	
+	(* SCENARIO START *)
+	// Id - 78
+		(* 1 Object, 1 Boundary 
+			SENSOR_DETECTED_BB1_OA2  *) 
+	
+	Scen_table[L_TableIndex].Id := L_TableIndex;
+	Scen_table[L_TableIndex].Priority := SCEN_PRIORITY_1_B_1_O;
+	Scen_table[L_TableIndex].Name := 'SENSOR_DETECTED_BB1_OA2';
+		
+		L_ActionIndex :=  0;	
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_ROTATE_RIGHT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_TO_ROTATE_270;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+		
+		L_ActionIndex :=  L_ActionIndex + 1;	
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_HOLD;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := T#5ms;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;		
+
+	Scen_table[L_TableIndex].NumOfActions := L_ActionIndex + 1;
+	L_TableIndex := L_TableIndex + 1;
+	(* SCENARIO END *)			
+	
+	(* SCENARIO START *)
+	// Id - 79
+		(* 1 Object, 1 Boundary 
+			SENSOR_DETECTED_BA2_OA2  *) 
+	
+	Scen_table[L_TableIndex].Id := L_TableIndex;
+	Scen_table[L_TableIndex].Priority := SCEN_PRIORITY_1_B_1_O;
+	Scen_table[L_TableIndex].Name := 'SENSOR_DETECTED_BA2_OA2';
+		
+		L_ActionIndex :=  0;	
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_ROTATE_RIGHT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_TO_ROTATE_270;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+		
+		L_ActionIndex :=  L_ActionIndex + 1;	
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_HOLD;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := T#10ms;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;		
+
+	Scen_table[L_TableIndex].NumOfActions := L_ActionIndex + 1;
+	L_TableIndex := L_TableIndex + 1;
+	(* SCENARIO END *)			
+	
+	(* SCENARIO START *)
+	// Id - 80
+		(* 1 Object, 1 Boundary 
+			SENSOR_DETECTED_BA1_OA2  *) 
+	
+	Scen_table[L_TableIndex].Id := L_TableIndex;
+	Scen_table[L_TableIndex].Priority := SCEN_PRIORITY_1_B_1_O;
+	Scen_table[L_TableIndex].Name := 'SENSOR_DETECTED_BA1_OA2';
+	
+		L_ActionIndex := 0;	
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_ROTATE_LEFT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_TO_ROTATE_90;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+		
+		L_ActionIndex :=  L_ActionIndex + 1;	
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_HOLD;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := T#10ms;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;		
+
+	Scen_table[L_TableIndex].NumOfActions := L_ActionIndex + 1;
+	L_TableIndex := L_TableIndex + 1;
+	(* SCENARIO END *)			
+	
+	(* SCENARIO START *)
+	// Id - 81
+		(* 1 Object, 1 Boundary 
+			SENSOR_DETECTED_BB2_OB1  *) 
+	
+	Scen_table[L_TableIndex].Id := L_TableIndex;
+	Scen_table[L_TableIndex].Priority := SCEN_PRIORITY_1_B_1_O;
+	Scen_table[L_TableIndex].Name := 'SENSOR_DETECTED_BB2_OB1';
+		
+	
+		L_ActionIndex :=  0;	
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_MOVE_RIGHT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_ONE_B_ONE_O;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;		
+
+	Scen_table[L_TableIndex].NumOfActions := L_ActionIndex + 1;
+	L_TableIndex := L_TableIndex + 1;
+	(* SCENARIO END *)	
+	
+	(* SCENARIO START *)
+	// Id - 
+		(* 1 Object, 1 Boundary 
+			SENSOR_DETECTED_BA2_OB1  *) 
+	
+		//Same as 81
+		
+	(* SCENARIO END *)		
+	
+	(* SCENARIO START *)
+	// Id - 
+		(* 1 Object, 1 Boundary 
+			SENSOR_DETECTED_BA1_OB1  *) 
+		
+		//Same as 36
+			
+	(* SCENARIO END *)		
+	
+	
+	L_TableIndex := 82;
+	(* SCENARIO START *)
+	// Id - 82
+		(* 1 Object, 1 Boundary 
+			SENSOR_DETECTED_BB2_OB2  *) 
+	
+	Scen_table[L_TableIndex].Id := L_TableIndex;
+	Scen_table[L_TableIndex].Priority := SCEN_PRIORITY_1_B_1_O;
+	Scen_table[L_TableIndex].Name := 'SENSOR_DETECTED_BB2_OB2';
+		
+	
+		L_ActionIndex :=  0;	
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_ROTATE_RIGHT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_TO_ROTATE_90;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;	
+		
+		L_ActionIndex :=  L_ActionIndex + 1;	
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_HOLD;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := T#5ms;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;		
+
+	Scen_table[L_TableIndex].NumOfActions := L_ActionIndex + 1;
+	L_TableIndex := L_TableIndex + 1;
+	(* SCENARIO END *)		
+	
+	(* SCENARIO START *)
+	// Id - 83
+		(* 1 Object, 1 Boundary 
+			SENSOR_DETECTED_BB1_OB2  *) 
+	
+	Scen_table[L_TableIndex].Id := L_TableIndex;
+	Scen_table[L_TableIndex].Priority := SCEN_PRIORITY_1_B_1_O;
+	Scen_table[L_TableIndex].Name := 'SENSOR_DETECTED_BB1_OB2';
+	
+		L_ActionIndex :=  0;	
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_ROTATE_LEFT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_TO_ROTATE_90;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+		
+		L_ActionIndex :=  L_ActionIndex + 1;	
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_HOLD;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := T#5ms;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;		
+
+	Scen_table[L_TableIndex].NumOfActions := L_ActionIndex + 1;
+	L_TableIndex := L_TableIndex + 1;
+	(* SCENARIO END *)	
+	
+	(* SCENARIO START *)
+	// Id - 84
+		(* 1 Object, 1 Boundary 
+			SENSOR_DETECTED_BA2_OB2  *) 
+	
+	Scen_table[L_TableIndex].Id := L_TableIndex;
+	Scen_table[L_TableIndex].Priority := SCEN_PRIORITY_1_B_1_O;
+	Scen_table[L_TableIndex].Name := 'SENSOR_DETECTED_BA2_OB2';
+	
+		L_ActionIndex :=  0;	
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_ROTATE_RIGHT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_TO_ROTATE_180;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+		
+		L_ActionIndex :=  L_ActionIndex + 1;	
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_HOLD;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := T#10ms;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;		
+
+	Scen_table[L_TableIndex].NumOfActions := L_ActionIndex + 1;
+	L_TableIndex := L_TableIndex + 1;
+	(* SCENARIO END *)	
+	
+	(* SCENARIO START *)
+	// Id - 85
+		(* 1 Object, 1 Boundary 
+			SENSOR_DETECTED_BA1_OB2  *) 
+	
+	Scen_table[L_TableIndex].Id := L_TableIndex;
+	Scen_table[L_TableIndex].Priority := SCEN_PRIORITY_1_B_1_O;
+	Scen_table[L_TableIndex].Name := 'SENSOR_DETECTED_BA1_OB2';
+	
+		L_ActionIndex :=  0;	
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_ROTATE_LEFT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_TO_ROTATE_270;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+		
+		L_ActionIndex :=  L_ActionIndex + 1;	
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_HOLD;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := T#10ms;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;		
+
+	Scen_table[L_TableIndex].NumOfActions := L_ActionIndex + 1;
+	L_TableIndex := L_TableIndex + 1;
+	(* SCENARIO END *)	
+	
+	(* SCENARIO START *)
+	// Id - 86
+		(* 1 Object, 2 Boundary 
+			SENSOR_DETECTED_BB2_BA2_OA1  *) 
+	
+	Scen_table[L_TableIndex].Id := L_TableIndex;
+	Scen_table[L_TableIndex].Priority := SCEN_PRIORITY_2_B_1_O;
+	Scen_table[L_TableIndex].Name := 'SENSOR_DETECTED_BB2_BA2_OA1';
+	
+		L_ActionIndex :=  0;	
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_MOVE_BW_RIGHT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := T#200ms;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+		
+
+	Scen_table[L_TableIndex].NumOfActions := L_ActionIndex + 1;
+	L_TableIndex := L_TableIndex + 1;
+	(* SCENARIO END *)
+
+	(* SCENARIO START *)
+	// Id - 87
+		(* 1 Object, 2 Boundary 
+			SENSOR_DETECTED_BB1_BA2_OA1  *) 
+	
+	Scen_table[L_TableIndex].Id := L_TableIndex;
+	Scen_table[L_TableIndex].Priority := SCEN_PRIORITY_2_B_1_O;
+	Scen_table[L_TableIndex].Name := 'SENSOR_DETECTED_BB1_BA2_OA1';
+	
+		L_ActionIndex :=  0;	
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_MOVE_BW_LEFT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := T#200ms;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+		
+
+	Scen_table[L_TableIndex].NumOfActions := L_ActionIndex + 1;
+	L_TableIndex := L_TableIndex + 1;
+	(* SCENARIO END *)
+
+	(* SCENARIO START *)
+	// Id - 88
+		(* 1 Object, 2 Boundary 
+			SENSOR_DETECTED_BB2_BA1_OA1  *) 
+	
+	Scen_table[L_TableIndex].Id := L_TableIndex;
+	Scen_table[L_TableIndex].Priority := SCEN_PRIORITY_2_B_1_O;
+	Scen_table[L_TableIndex].Name := 'SENSOR_DETECTED_BB2_BA1_OA1';
+	
+		L_ActionIndex :=  0;	
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_MOVE_FW_LEFT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := T#200ms;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+		
+
+	Scen_table[L_TableIndex].NumOfActions := L_ActionIndex + 1;
+	L_TableIndex := L_TableIndex + 1;
+	(* SCENARIO END *)
+	
+	(* SCENARIO START *)
+	// Id - 89
+		(* 1 Object, 2 Boundary 
+			SENSOR_DETECTED_BB1_BA1_OA1  *) 
+	
+	Scen_table[L_TableIndex].Id := L_TableIndex;
+	Scen_table[L_TableIndex].Priority := SCEN_PRIORITY_2_B_1_O;
+	Scen_table[L_TableIndex].Name := 'SENSOR_DETECTED_BB1_BA1_OA1';
+	
+		L_ActionIndex :=  0;	
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_MOVE_LEFT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := T#200ms;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+		
+
+	Scen_table[L_TableIndex].NumOfActions := L_ActionIndex + 1;
+	L_TableIndex := L_TableIndex + 1;
+	(* SCENARIO END *)	
+	
+	(* SCENARIO START *)
+	// Id - 90
+		(* 1 Object, 2 Boundary 
+			SENSOR_DETECTED_BB2_BA2_OA2  *) 
+	
+	Scen_table[L_TableIndex].Id := L_TableIndex;
+	Scen_table[L_TableIndex].Priority := SCEN_PRIORITY_2_B_1_O;
+	Scen_table[L_TableIndex].Name := 'SENSOR_DETECTED_BB2_BA2_OA2';
+	
+		L_ActionIndex :=  0;	
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_MOVE_RIGHT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := T#200ms;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+		
+
+	Scen_table[L_TableIndex].NumOfActions := L_ActionIndex + 1;
+	L_TableIndex := L_TableIndex + 1;
+	(* SCENARIO END *)	
+	
+	(* SCENARIO START *)
+	// Id - 
+		(* 1 Object, 2 Boundary 
+			SENSOR_DETECTED_BB1_BA2_OA2  *) 
+	
+		// Same as	86
+	
+	(* SCENARIO END *)	
+	
+	(* SCENARIO START *)
+	// Id - 91
+		(* 1 Object, 2 Boundary 
+			SENSOR_DETECTED_BB2_BA1_OA2  *) 
+	
+	Scen_table[L_TableIndex].Id := L_TableIndex;
+	Scen_table[L_TableIndex].Priority := SCEN_PRIORITY_2_B_1_O;
+	Scen_table[L_TableIndex].Name := 'SENSOR_DETECTED_BB2_BA1_OA2';
+	
+		L_ActionIndex :=  0;	
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_MOVE_FW_RIGHT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := T#200ms;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+		
+
+	Scen_table[L_TableIndex].NumOfActions := L_ActionIndex + 1;
+	L_TableIndex := L_TableIndex + 1;
+	
+	(* SCENARIO END *)	
+	
+	(* SCENARIO START *)
+	// Id - 
+		(* 1 Object, 2 Boundary 
+			SENSOR_DETECTED_BB1_BA1_OA2  *) 
+	
+		// Same as 88
+	
+	(* SCENARIO END *)	
+	
+	(* SCENARIO START *)
+	// Id - 
+		(* 1 Object, 2 Boundary 
+			SENSOR_DETECTED_BB2_BA2_OB1  *) 
+	
+		//Same as 86
+	
+	(* SCENARIO END *)	
+	
+	
+	(* SCENARIO START *)
+	// Id - 92
+		(* 1 Object, 2 Boundary 
+			SENSOR_DETECTED_BB1_BA2_OB1  *) 
+	
+	Scen_table[L_TableIndex].Id := L_TableIndex;
+	Scen_table[L_TableIndex].Priority := SCEN_PRIORITY_2_B_1_O;
+	Scen_table[L_TableIndex].Name := 'SENSOR_DETECTED_BB1_BA2_OB1';
+	
+		L_ActionIndex :=  0;	
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_MOVE_BACKWARD;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := T#200ms;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+		
+
+	Scen_table[L_TableIndex].NumOfActions := L_ActionIndex + 1;
+	L_TableIndex := L_TableIndex + 1;
+	
+	(* SCENARIO END *)	
+	
+	
+	
+	(* SCENARIO START *)
+	// Id - 92
+		(* 1 Object, 2 Boundary 
+			SENSOR_DETECTED_BB2_BA1_OB1  *) 
+		
+		// Same as 91
+	
+	(* SCENARIO END *)	
+
+	(* SCENARIO START *)
+	// Id - 
+		(* 1 Object, 2 Boundary 
+			SENSOR_DETECTED_BB1_BA1_OB1  *) 
+	
+		// same as 87
+		
+	(* SCENARIO END *)	
+	
+	(* SCENARIO START *)
+	// Id - 
+		(* 1 Object, 2 Boundary 
+			SENSOR_DETECTED_BB2_BA2_OB2  *) 
+	
+		// Same as 91
+		
+	(* SCENARIO END *)	
+	
+	
+	(* SCENARIO START *)
+	// Id - 
+		(* 1 Object, 2 Boundary 
+			SENSOR_DETECTED_BB1_BA2_OB2  *) 
+
+		// Same as 87
+	
+	(* SCENARIO END *)	
+	
+	(* SCENARIO START *)
+	// Id - 93
+		(* 1 Object, 2 Boundary 
+			SENSOR_DETECTED_BB2_BA1_OB2  *) 
+
+	Scen_table[L_TableIndex].Id := L_TableIndex;
+	Scen_table[L_TableIndex].Priority := SCEN_PRIORITY_2_B_1_O;
+	Scen_table[L_TableIndex].Name := 'SENSOR_DETECTED_BB2_BA1_OB2';
+	
+		L_ActionIndex :=  0;	
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_MOVE_FORWARD;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := T#200ms;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+		
+
+	Scen_table[L_TableIndex].NumOfActions := L_ActionIndex + 1;
+	L_TableIndex := L_TableIndex + 1;
+	
+	(* SCENARIO END *)	
+	
+	(* SCENARIO START *)
+	// Id - 93
+		(* 1 Object, 2 Boundary 
+			SENSOR_DETECTED_BB1_BA1_OB2  *) 
+		
+		// same as 88
+	
+	(* SCENARIO END *)	
+	
+	
+	(* SCENARIO START *)
+	// Id - 94
+		(* 1 Object, 1 Boundary 
+			SENSOR_DETECTED_BB1_OB1  *) 
+	
+	Scen_table[L_TableIndex].Id := L_TableIndex;
+	Scen_table[L_TableIndex].Priority := 201;
+	Scen_table[L_TableIndex].Name := 'SENSOR_DETECTED_BB1_OB1';
+		
+	
+		L_ActionIndex :=  0;	
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_MOVE_BACKWARD;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := T#100ms;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;		
+
+		L_ActionIndex :=  L_ActionIndex + 1;	
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_ROTATE_RIGHT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_TO_ROTATE_180;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;	
+
+		L_ActionIndex :=  L_ActionIndex + 1;	
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_HOLD;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := T#10ms;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;	
+		
+	Scen_table[L_TableIndex].NumOfActions := L_ActionIndex + 1;
+	L_TableIndex := L_TableIndex + 1;
+	(* SCENARIO END *)	
+	
+	(* SCENARIO START *)
+	// Id - 95
+	
+		(* 1 Object, 1 Boundary 
+			SENSOR_DETECTED_BA1_OA1 *)
+			
+	Scen_table[L_TableIndex].Id := L_TableIndex;
+	Scen_table[L_TableIndex].Priority := 201;
+	Scen_table[L_TableIndex].Name := 'SENSOR_DETECTED_BA1_OA1';
+		
+	
+		L_ActionIndex :=  0;	
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_MOVE_FW_LEFT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_ONE_B_ONE_O;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;		
+	
+	Scen_table[L_TableIndex].NumOfActions := L_ActionIndex + 1;
+	L_TableIndex := L_TableIndex + 1;
+	(* SCENARIO END *)	
+	
+	(* SCENARIO START *)   
+	// Id - 98
+	L_TableIndex := 98;
+	
+	Scen_table[L_TableIndex].Id := L_TableIndex;
+	Scen_table[L_TableIndex].Priority := 255;
+	Scen_table[L_TableIndex].Name := 'Start Strategy-left';
+
+		L_ActionIndex :=  0;        
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_MOVE_BACKWARD;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := T#100ms;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_50;
+		
+		L_ActionIndex :=  L_ActionIndex + 1;        
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_MOVE_LEFT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := T#600ms;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_50;
+		
+		L_ActionIndex :=  L_ActionIndex + 1;        
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_HOLD;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := T#200ms;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+
+		L_ActionIndex :=  L_ActionIndex + 1;        
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_ROTATE_LEFT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := T#175ms;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_50;
+
+		L_ActionIndex :=  L_ActionIndex + 1;        
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_MOVE_FORWARD;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := T#200ms;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+		
+
+	Scen_table[L_TableIndex].NumOfActions := L_ActionIndex + 1;
+	L_TableIndex := L_TableIndex + 1;
+	
+	(* SCENARIO END *)       	
+	
+	(* SCENARIO START *)   
+	// Id - 99
+	L_TableIndex := 99;
+	
+	Scen_table[L_TableIndex].Id := L_TableIndex;
+	Scen_table[L_TableIndex].Priority := 255;
+	Scen_table[L_TableIndex].Name := 'Start Strategy-right';
+
+		L_ActionIndex :=  0;        
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_MOVE_BACKWARD;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := T#100ms;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_50;
+
+		L_ActionIndex :=  L_ActionIndex + 1;        
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_MOVE_RIGHT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := T#600ms;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_50;
+		
+		L_ActionIndex :=  L_ActionIndex + 1;        
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_HOLD;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := T#200ms;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+
+		
+		L_ActionIndex :=  L_ActionIndex + 1;        
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_ROTATE_RIGHT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := T#125ms;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_50;
+
+		L_ActionIndex :=  L_ActionIndex + 1;        
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_MOVE_FORWARD;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := T#200ms;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+
+	Scen_table[L_TableIndex].NumOfActions := L_ActionIndex + 1;
+	L_TableIndex := L_TableIndex + 1;
+	
+	(* SCENARIO END *)       
+	
+	
+	(* SCENARIO START *)   
+	// Id - 30 
+	L_TableIndex := 30;
+	
+	(* 2 Object, 2 Boundary 
+		SENSOR_DETECTED_BB2_BA2_OA1_OA2 *)
+	
+	Scen_table[L_TableIndex].Id := L_TableIndex;
+	Scen_table[L_TableIndex].Priority := SCEN_PRIORITY_2_B_2_O;
+	Scen_table[L_TableIndex].Name := 'SENSOR_DETECTED_BB2_BA2_OA1_OA2';
+
+		
+		L_ActionIndex :=  0;        
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_MOVE_BW_RIGHT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_2_O_1_2_B;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+		
+
+	Scen_table[L_TableIndex].NumOfActions := L_ActionIndex + 1;
+	L_TableIndex := L_TableIndex + 1;
+	
+	(* SCENARIO END *)    
+	
+	(* SCENARIO START *)   
+	// Id - 31 
+	
+	(* 2 Object, 2 Boundary 
+		SENSOR_DETECTED_BB1_BA2_OA1_OA2 *)
+	
+	Scen_table[L_TableIndex].Id := L_TableIndex;
+	Scen_table[L_TableIndex].Priority := SCEN_PRIORITY_2_B_2_O;
+	Scen_table[L_TableIndex].Name := 'SENSOR_DETECTED_BB1_BA2_OA1_OA2';
+
+		
+		L_ActionIndex :=  0;        
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_MOVE_BW_LEFT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_2_O_1_2_B;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+		
+
+	Scen_table[L_TableIndex].NumOfActions := L_ActionIndex + 1;
+	L_TableIndex := L_TableIndex + 1;
+	
+	(* SCENARIO END *)  
+	
+	(* SCENARIO START *)   
+	// Id - 32 
+	(* 2 Object, 2 Boundary 
+		SENSOR_DETECTED_BB2_BA1_OA1_OA2 *)
+	
+	Scen_table[L_TableIndex].Id := L_TableIndex;
+	Scen_table[L_TableIndex].Priority := SCEN_PRIORITY_2_B_2_O;
+	Scen_table[L_TableIndex].Name := 'SENSOR_DETECTED_BB2_BA1_OA1_OA2';
+
+		
+		L_ActionIndex :=  0;        
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_MOVE_FORWARD;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_2_O_1_2_B;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+		
+
+	Scen_table[L_TableIndex].NumOfActions := L_ActionIndex + 1;
+	L_TableIndex := L_TableIndex + 1;
+	
+	(* SCENARIO END *)  
+	
+	
+	(* SCENARIO START *)   
+	// Id - 
+	(* 2 Object, 2 Boundary 
+		SENSOR_DETECTED_BB1_BA1_OA1_OA2 *)
+	
+		// Same as 31
+		
+	(* SCENARIO END *) 
+
+	
+	(* SCENARIO START *)   
+	// Id - 
+		(* 2 Object, 2 Boundary 
+			SENSOR_DETECTED_BB2_BA2_OA1_OB1 *)
+		// Same as 30
+	(* SCENARIO END *)  
+	
+	(* SCENARIO START *)   
+	// Id - 
+		(* 2 Object, 2 Boundary 
+		SENSOR_DETECTED_BB1_BA2_OA1_OB1 *)
+		//Same as 31
+	(* SCENARIO END *)  
+	
+	(* SCENARIO START *)   
+	// Id - 33 
+	(* 2 Object, 2 Boundary 
+		SENSOR_DETECTED_BB2_BA1_OA1_OB1 *)
+	
+	Scen_table[L_TableIndex].Id := L_TableIndex;
+	Scen_table[L_TableIndex].Priority := SCEN_PRIORITY_2_B_2_O;
+	Scen_table[L_TableIndex].Name := 'SENSOR_DETECTED_BB2_BA1_OA1_OB1';
+
+		
+		L_ActionIndex :=  0;        
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_MOVE_FW_LEFT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_2_O_1_2_B;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+		
+
+	Scen_table[L_TableIndex].NumOfActions := L_ActionIndex + 1;
+	L_TableIndex := L_TableIndex + 1;
+	
+	(* SCENARIO END *)  
+	
+	
+	(* SCENARIO START *)   
+	// Id - 
+		(* 2 Object, 2 Boundary 
+		SENSOR_DETECTED_BB1_BA1_OA1_OB1 *)
+		//Same as 31
+	(* SCENARIO END *)  
+	
+	(* SCENARIO START *)   
+	// Id - 
+		(* 2 Object, 2 Boundary 
+		SENSOR_DETECTED_BB2_BA2_OA2_OB1 *)
+		//Same as 30
+	(* SCENARIO END *)  
+	
+	(* SCENARIO START *)   
+	// Id - 
+		(* 2 Object, 2 Boundary 
+		SENSOR_DETECTED_BB1_BA2_OA2_OB1 *)
+		//Same as 30
+	(* SCENARIO END *)  
+	
+
+	(* SCENARIO START *)   
+	// Id - 34 
+	(* 2 Object, 2 Boundary 
+		SENSOR_DETECTED_BB2_BA1_OA2_OB1 *)
+	
+	Scen_table[L_TableIndex].Id := L_TableIndex;
+	Scen_table[L_TableIndex].Priority := SCEN_PRIORITY_2_B_2_O;
+	Scen_table[L_TableIndex].Name := 'SENSOR_DETECTED_BB2_BA1_OA2_OB1';
+
+		
+		L_ActionIndex :=  0;        
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_MOVE_FW_RIGHT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_2_O_1_2_B;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+		
+
+	Scen_table[L_TableIndex].NumOfActions := L_ActionIndex + 1;
+	L_TableIndex := L_TableIndex + 1;
+	
+	(* SCENARIO END *)  
+	
+	
+	(* SCENARIO START *)   
+	// Id - 
+		(* 2 Object, 2 Boundary 
+		SENSOR_DETECTED_BB1_BA1_OA2_OB1 *)
+		//Same as 31
+	(* SCENARIO END *)  
+	
+	(* SCENARIO START *)   
+	// Id - 
+		(* 2 Object, 2 Boundary 
+		SENSOR_DETECTED_BB2_BA2_OA1_OB2 *)
+		//Same as 34
+	(* SCENARIO END *)  
+	
+	(* SCENARIO START *)   
+	// Id - 
+		(* 2 Object, 2 Boundary 
+		 SENSOR_DETECTED_BB1_BA2_OA1_OB2*)
+		//Same as 31
+	(* SCENARIO END *)  
+	
+	(* SCENARIO START *)   
+	// Id - 
+		(* 2 Object, 2 Boundary 
+		 SENSOR_DETECTED_BB2_BA1_OA1_OB2 *)
+		//Same as 33
+	(* SCENARIO END *)  
+	
+	(* SCENARIO START *)   
+	// Id - 
+		(* 2 Object, 2 Boundary 
+		 SENSOR_DETECTED_BB1_BA1_OA1_OB2 *)
+		//Same as 33
+	(* SCENARIO END *)  
+	
+	(* SCENARIO START *)   
+	// Id - 
+		(* 2 Object, 2 Boundary 
+		 SENSOR_DETECTED_BB2_BA2_OA2_OB2 *)
+		//Same as 34
+	(* SCENARIO END *)  
+	
+	(* SCENARIO START *)   
+	// Id - 
+		(* 2 Object, 2 Boundary 
+		 SENSOR_DETECTED_BB1_BA2_OA2_OB2 *)
+		//Same as 30
+	(* SCENARIO END *)  
+	
+	(* SCENARIO START *)   
+	// Id - 
+		(* 2 Object, 2 Boundary 
+		 SENSOR_DETECTED_BB2_BA1_OA2_OB2 *)
+		//Same as 34
+	(* SCENARIO END *)  
+	
+	(* SCENARIO START *)   
+	// Id - 
+		(* 2 Object, 2 Boundary 
+		 SENSOR_DETECTED_BB1_BA1_OA2_OB2 *)
+		//Same as 33
+	(* SCENARIO END *)  
+	
+	(* SCENARIO START *)   
+	// Id - 35
+		(* 2 Object, 2 Boundary 
+		 SENSOR_DETECTED_BB2_BA2_OB1_OB2 *)
+		 
+	Scen_table[L_TableIndex].Id := L_TableIndex;
+	Scen_table[L_TableIndex].Priority := SCEN_PRIORITY_2_B_2_O;
+	Scen_table[L_TableIndex].Name := 'SENSOR_DETECTED_BB2_BA2_OB1_OB2';
+
+		
+		L_ActionIndex :=  0;        
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_MOVE_RIGHT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_2_O_1_2_B;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+		
+
+	Scen_table[L_TableIndex].NumOfActions := L_ActionIndex + 1;
+	L_TableIndex := L_TableIndex + 1;
+	(* SCENARIO END *)  
+	
+	(* SCENARIO START *)   
+	// Id - 
+		(* 2 Object, 2 Boundary 
+		 SENSOR_DETECTED_BB1_BA2_OB1_OB2 *)
+		//Same as 31
+	(* SCENARIO END *)  	
+	
+
+	(* SCENARIO START *)   
+	// Id - 
+		(* 2 Object, 2 Boundary 
+		 SENSOR_DETECTED_BB2_BA1_OB1_OB2 *)
+		//Same as 33
+		
+	(* SCENARIO END *)  
+	
+
+	(* SCENARIO START *)   
+	// Id - 36
+		(* 2 Object, 2 Boundary 
+		 SENSOR_DETECTED_BB1_BA1_OB1_OB2 *)
+		 
+	Scen_table[L_TableIndex].Id := L_TableIndex;
+	Scen_table[L_TableIndex].Priority := SCEN_PRIORITY_2_B_2_O;
+	Scen_table[L_TableIndex].Name := 'SENSOR_DETECTED_BB1_BA1_OB1_OB2';
+
+		
+		L_ActionIndex :=  0;        
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_MOVE_LEFT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_2_O_1_2_B;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+		
+
+	Scen_table[L_TableIndex].NumOfActions := L_ActionIndex + 1;
+	L_TableIndex := L_TableIndex + 1;
+	(* SCENARIO END *)  
+	
+	L_TableIndex := 40;
+	
+	(* SCENARIO START *)   
+	// Id - 
+		(* 2 Object, 1 Boundary 
+		 SENSOR_DETECTED_BB2_OA1_OA2 *)
+		
+		//Same as 34
+
+	(* SCENARIO END *)  
+	
+	(* SCENARIO START *)   
+	// Id - 
+		(* 2 Object, 1 Boundary 
+		 SENSOR_DETECTED_BB1_OA1_OA2 *)
+		
+		//Same as 31
+
+	(* SCENARIO END *)  
+	
+	(* SCENARIO START *)   
+	// Id - 
+		(* 2 Object, 1 Boundary 
+		 SENSOR_DETECTED_BA2_OA1_OA2 *)
+		
+		//Same as 30
+
+	(* SCENARIO END *)  
+	
+	(* SCENARIO START *)   
+	// Id - 
+		(* 2 Object, 1 Boundary 
+		 SENSOR_DETECTED_BA1_OA1_OA2 *)
+		
+		//Same as 32
+
+	(* SCENARIO END *)  
+	
+	(* SCENARIO START *)   
+	// Id - 
+		(* 2 Object, 1 Boundary 
+		 SENSOR_DETECTED_BB2_OA1_OB1 *)
+		
+		//Same as 34
+
+	(* SCENARIO END *)  
+	
+	(* SCENARIO START *)   
+	// Id - 
+		(* 2 Object, 1 Boundary 
+		 SENSOR_DETECTED_BB1_OA1_OB1 *)
+		
+		//Same as 31
+
+	(* SCENARIO END *) 
+	
+	(* SCENARIO START *)   
+	// Id - 
+		(* 2 Object, 1 Boundary 
+		  SENSOR_DETECTED_BA2_OA1_OB1 *)
+		
+		//Same as 30
+
+	(* SCENARIO END *) 
+	
+	(* SCENARIO START *)   
+	// Id - 
+		(* 2 Object, 1 Boundary 
+		  SENSOR_DETECTED_BA1_OA1_OB1 *)
+		
+		//Same as 31
+
+	(* SCENARIO END *) 
+	
+	(* SCENARIO START *)   
+	// Id - 
+		(* 2 Object, 1 Boundary 
+		  SENSOR_DETECTED_BB2_OA2_OB1 *)
+		
+		//Same as 35
+
+	(* SCENARIO END *) 
+	
+	(* SCENARIO START *)   
+	// Id - 
+		(* 2 Object, 1 Boundary 
+		  SENSOR_DETECTED_BB1_OA2_OB1 *)
+		
+		//Same as 31
+
+	(* SCENARIO END *) 
+	
+	(* SCENARIO START *)   
+	// Id - 
+		(* 2 Object, 1 Boundary 
+		   SENSOR_DETECTED_BA2_OA2_OB1 *)
+		
+		//Same as 30
+
+	(* SCENARIO END *) 
+	
+	(* SCENARIO START *)   
+	// Id - 
+		(* 2 Object, 1 Boundary 
+		   SENSOR_DETECTED_BA1_OA2_OB1 *)
+		
+		//Same as 33
+
+	(* SCENARIO END *) 
+	
+	(* SCENARIO START *)   
+	// Id - 
+		(* 2 Object, 1 Boundary 
+		   SENSOR_DETECTED_BB2_OA1_OB2 *)
+		
+		//Same as 32
+
+	(* SCENARIO END *) 
+	
+	(* SCENARIO START *)   
+	// Id - 
+		(* 2 Object, 1 Boundary 
+		    SENSOR_DETECTED_BB1_OA1_OB2 *)
+		
+		//Same as 36
+
+	(* SCENARIO END *) 
+	
+	(* SCENARIO START *)   
+	// Id - 
+		(* 2 Object, 1 Boundary 
+		    SENSOR_DETECTED_BA2_OA1_OB2 *)
+		
+		//Same as 30
+
+	(* SCENARIO END *) 
+	
+	(* SCENARIO START *)   
+	// Id - 
+		(* 2 Object, 1 Boundary 
+		    SENSOR_DETECTED_BA1_OA1_OB2 *)
+		
+		//Same as 33
+
+	(* SCENARIO END *) 
+	
+	(* SCENARIO START *)   
+	// Id - 
+		(* 2 Object, 1 Boundary 
+		    SENSOR_DETECTED_BB2_OA2_OB2 *)
+		
+		//Same as 34
+
+	(* SCENARIO END *) 
+	
+	
+	(* SCENARIO START *)   
+	// Id - 
+		(* 2 Object, 1 Boundary 
+		    SENSOR_DETECTED_BB1_OA2_OB2 *)
+		
+		//Same as 31
+
+	(* SCENARIO END *) 
+	
+	(* SCENARIO START *)   
+	// Id - 
+		(* 2 Object, 1 Boundary 
+		    SENSOR_DETECTED_BA2_OA2_OB2 *)
+		
+		//Same as 35
+
+	(* SCENARIO END *) 
+	
+	(* SCENARIO START *)   
+	// Id - 
+		(* 2 Object, 1 Boundary 
+		    SENSOR_DETECTED_BA1_OA2_OB2  *)
+		
+		//Same as 32
+
+	(* SCENARIO END *) 
+	
+	(* SCENARIO START *)   
+	// Id - 
+		(* 2 Object, 1 Boundary 
+		    SENSOR_DETECTED_BB2_OB1_OB2  *)
+		
+		//Same as 35
+
+	(* SCENARIO END *) 
+	
+	(* SCENARIO START *)   
+	// Id - 
+		(* 2 Object, 1 Boundary 
+		    SENSOR_DETECTED_BB1_OB1_OB2  *)
+		
+		//Same as 36
+
+	(* SCENARIO END *) 
+	
+	(* SCENARIO START *)   
+	// Id - 
+		(* 2 Object, 1 Boundary 
+		    SENSOR_DETECTED_BA2_OB1_OB2  *)
+		
+		//Same as 35
+
+	(* SCENARIO END *) 
+	
+	(* SCENARIO START *)   
+	// Id - 
+		(* 2 Object, 1 Boundary 
+		    SENSOR_DETECTED_BA1_OB1_OB2  *)
+		
+		//Same as 36
+
+	(* SCENARIO END *) 
+	
+	L_TableIndex := 20;
+	(* SCENARIO START *)
+	// Id - 20
+		(* 1 Object, 1 Boundary 
+			SENSOR_DETECTED_BB1_OB1  *) 
+	
+	Scen_table[L_TableIndex].Id := L_TableIndex;
+	Scen_table[L_TableIndex].Priority := 201;
+	Scen_table[L_TableIndex].Name := 'SENSOR_DETECTED_BB1_OB1';
+		
+	
+		L_ActionIndex :=  0;	
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_ROTATE_RIGHT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_TO_ROTATE_90;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;	
+
+		L_ActionIndex :=  L_ActionIndex + 1;	
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_HOLD;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := T#10ms;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;	
+		
+	Scen_table[L_TableIndex].NumOfActions := L_ActionIndex + 1;
+	L_TableIndex := L_TableIndex + 1;
+	(* SCENARIO END *)	
+	
+	(* SCENARIO START *)
+	// Id - 21
+		(* 1 Object, 1 Boundary 
+			SENSOR_DETECTED_BB1_OB1  *) 
+	
+	Scen_table[L_TableIndex].Id := L_TableIndex;
+	Scen_table[L_TableIndex].Priority := 201;
+	Scen_table[L_TableIndex].Name := 'SENSOR_DETECTED_BB1_OB1';
+		
+	
+		L_ActionIndex :=  0;	
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_ROTATE_LEFT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_TO_ROTATE_90;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;	
+
+		L_ActionIndex :=  L_ActionIndex + 1;	
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_HOLD;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := T#10ms;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;	
+		
+	Scen_table[L_TableIndex].NumOfActions := L_ActionIndex + 1;
+	L_TableIndex := L_TableIndex + 1;
+	(* SCENARIO END *)	
+	
+	(* SCENARIO START *)
+	// Id - 22
+		(* 1 Object, 1 Boundary 
+			SENSOR_DETECTED_BB1_OB1  *) 
+	
+	Scen_table[L_TableIndex].Id := L_TableIndex;
+	Scen_table[L_TableIndex].Priority := 201;
+	Scen_table[L_TableIndex].Name := 'SENSOR_DETECTED_BB1_OB1';
+		
+	
+		L_ActionIndex :=  0;	
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_ROTATE_LEFT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_TO_ROTATE_180;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;	
+
+		L_ActionIndex :=  L_ActionIndex + 1;	
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_HOLD;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := T#10ms;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;	
+		
+	Scen_table[L_TableIndex].NumOfActions := L_ActionIndex + 1;
+	L_TableIndex := L_TableIndex + 1;
+	(* SCENARIO END *)	
+	
+	(* SCENARIO START *)
+	// Id - 23
+		(* 1 Object, 1 Boundary 
+			SENSOR_DETECTED_BB1_OB1  *) 
+	
+	Scen_table[L_TableIndex].Id := L_TableIndex;
+	Scen_table[L_TableIndex].Priority := 201;
+	Scen_table[L_TableIndex].Name := 'SENSOR_DETECTED_BB1_OB1';
+		
+	
+		L_ActionIndex :=  0;	
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_ROTATE_RIGHT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_TO_ROTATE_180;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;	
+
+		L_ActionIndex :=  L_ActionIndex + 1;	
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_HOLD;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := T#10ms;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;	
+		
+	Scen_table[L_TableIndex].NumOfActions := L_ActionIndex + 1;
+	L_TableIndex := L_TableIndex + 1;
+	(* SCENARIO END *)	
+	
+	(* SCENARIO START *)
+	// Id - 22
+		(* 1 Object, 1 Boundary 
+			SENSOR_DETECTED_BB1_OB1  *) 
+	
+	Scen_table[L_TableIndex].Id := L_TableIndex;
+	Scen_table[L_TableIndex].Priority := 201;
+	Scen_table[L_TableIndex].Name := 'SENSOR_DETECTED_BB1_OB1';
+		
+	
+		L_ActionIndex :=  0;	
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_ROTATE_LEFT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_TO_ROTATE_270;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;	
+
+		L_ActionIndex :=  L_ActionIndex + 1;	
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_HOLD;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := T#10ms;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;	
+		
+	Scen_table[L_TableIndex].NumOfActions := L_ActionIndex + 1;
+	L_TableIndex := L_TableIndex + 1;
+	(* SCENARIO END *)	
+	
+	(* SCENARIO START *)
+	// Id - 23
+		(* 1 Object, 1 Boundary 
+			SENSOR_DETECTED_BB1_OB1  *) 
+	
+	Scen_table[L_TableIndex].Id := L_TableIndex;
+	Scen_table[L_TableIndex].Priority := 201;
+	Scen_table[L_TableIndex].Name := 'SENSOR_DETECTED_BB1_OB1';
+		
+	
+		L_ActionIndex :=  0;	
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_ROTATE_RIGHT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := L_TIME_TO_ROTATE_270;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;	
+
+		L_ActionIndex :=  L_ActionIndex + 1;	
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_HOLD;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := T#10ms;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;	
+		
+	Scen_table[L_TableIndex].NumOfActions := L_ActionIndex + 1;
+	L_TableIndex := L_TableIndex + 1;
+	(* SCENARIO END *)	
+	
+	(* ADD NEW SCENARIOS BEFORE THIS *)
+END_IF;
+
+
+END_PROGRAM
+END_PROGRAM
+END_PROGRAM

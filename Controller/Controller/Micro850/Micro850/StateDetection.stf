@@ -1,0 +1,93 @@
+PROGRAM StateDetection
+
+L_ExeCount := L_ExeCount + 1;
+
+
+IF __SYSVA_FIRST_SCAN THEN 
+	(* First scan - Start 5 sec timer from here 
+	*)
+	SimulateInput := TRUE;
+	IF L_Robo_start_time <> T#0s THEN
+		L_Timer_execute :=  TRUE;
+	ELSE
+		L_Timer_execute :=  FALSE;
+	END_IF;
+
+	L_Robot_Pos_index := 0;
+	L_Boundary_status := 0;
+	L_Temp_Boundary_status := 0;
+	
+	L_Objects_status := 0;
+	L_Temp_object_status := 0;
+	
+	L_Temp_Sensor_status := 0;
+	L_Sensor_status := 0;
+	
+END_IF;
+
+IF L_Timer_execute THEN
+
+	L_START_ROBOT_TIMER(L_Timer_execute, L_Robo_start_time);
+
+	IF L_START_ROBOT_TIMER.Q THEN
+		(* Timer  *)
+		L_Timer_execute :=  FALSE;
+		SimulateInput := FALSE;
+		SimulateINObjectSensor := TRUE;
+		SimulateINUltraSensor := TRUE;
+		CommandedScenario := 1;
+		L_START_ROBOT_TIMER(L_Timer_execute, L_Robo_start_time);
+	END_IF;
+	
+	RETURN;
+END_IF;
+
+(* Robot position detection *)
+
+	L_Temp_Sensor_status := 0;
+	IF(NOT Boundary_Sensor_A1) THEN
+		L_Temp_Sensor_status := OR_MASK(L_Temp_Sensor_status,SENSOR_DETECTED_BA1);
+	END_IF;
+	
+	IF(NOT Boundary_Sensor_A2) THEN
+		L_Temp_Sensor_status := OR_MASK(L_Temp_Sensor_status,SENSOR_DETECTED_BA2);
+	END_IF;
+	
+	IF(NOT Boundary_Sensor_B1) THEN
+		L_Temp_Sensor_status := OR_MASK(L_Temp_Sensor_status,SENSOR_DETECTED_BB1);
+	END_IF;
+	
+	IF(NOT Boundary_Sensor_B2) THEN
+		L_Temp_Sensor_status := OR_MASK(L_Temp_Sensor_status,SENSOR_DETECTED_BB2);
+	END_IF;	
+	
+(* External Object Detection *)
+
+	IF(Object_Sensor_A1) THEN
+		L_Temp_Sensor_status := OR_MASK(L_Temp_Sensor_status,SENSOR_DETECTED_OA1);
+	END_IF;
+	IF(Object_Sensor_A2) THEN
+		L_Temp_Sensor_status := OR_MASK(L_Temp_Sensor_status,SENSOR_DETECTED_OA2);
+	END_IF;
+	IF(Object_Sensor_B1) THEN
+		L_Temp_Sensor_status := OR_MASK(L_Temp_Sensor_status,SENSOR_DETECTED_OB1);
+	END_IF;
+
+(* External Object detection - Ultrasonic *)
+	IF Ultra_Sensor_B1 < ULTRA_SENSOR_MAX and Ultra_Sensor_B1 > 0 THEN
+		L_Temp_Sensor_status := OR_MASK(L_Temp_Sensor_status,SENSOR_DETECTED_OB1);
+	END_IF;
+	
+	IF Ultra_Sensor_B2 < ULTRA_SENSOR_MAX and Ultra_Sensor_B1 > 0 THEN
+		L_Temp_Sensor_status := OR_MASK(L_Temp_Sensor_status,SENSOR_DETECTED_OB2);
+	END_IF;
+	
+	IF L_Temp_Sensor_status <> 0 THEN
+		CommandedScenario := Sensor_Input_Hashtable[L_Temp_Sensor_status];
+	END_IF;
+	
+(* Update the history for next time *)
+L_Boundary_status := L_Temp_Boundary_status;
+L_Objects_status := L_Temp_object_status;
+L_Sensor_status := L_Temp_Sensor_status;
+END_PROGRAM

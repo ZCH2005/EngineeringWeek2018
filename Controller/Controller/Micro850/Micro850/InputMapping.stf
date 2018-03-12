@@ -1,0 +1,93 @@
+PROGRAM InputMapping
+#info= QLD
+BOF
+
+
+(**)
+
+SOR  [0,1] (**) (**)  XIC  [1,0] (*SimulateIO*) (**)  RET [2,0]
+EOR [3,0]
+
+
+(**)
+
+SOR  [0,3] (**) (**)  XIC  [1,0] (*SimulateInput*) (**)  RET [2,0]
+EOR [3,0]
+
+
+(**)
+
+SOR  [0,5] (**) (**)  XIC  [1,0] (*SimulateINBoundarySensor*) (**)  JMP [2,0] (*OBJ_SENSORS*) (**)
+EOR [3,0]
+
+
+(*Bounadry Sensor near to motor A1*)
+
+SOR  [0,7] (**) (**)  XIC  [1,0] (*_IO_EM_DI_15*) (**)  OTE  [2,0] (*Boundary_Sensor_A1*) (**)
+EOR [3,0]
+
+
+(*Bounadry Sensor near to motor A2*)
+
+SOR  [0,9] (**) (**)  XIC  [1,0] (*_IO_EM_DI_14*) (**)  OTE  [2,0] (*Boundary_Sensor_A2*) (**)
+EOR [3,0]
+
+
+(*Bounadry Sensor near to motor B1*)
+
+SOR  [0,11] (**) (**)  XIC  [1,0] (*_IO_EM_DI_13*) (**)  OTE  [2,0] (*Boundary_Sensor_B1*) (**)
+EOR [3,0]
+
+
+(*Bounadry Sensor near to motor B2*)
+
+SOR  [0,13] (**) (**)  XIC  [1,0] (*_IO_EM_DI_16*) (**)  OTE  [2,0] (*Boundary_Sensor_B2*) (**)
+EOR [3,0]
+
+
+(**)
+
+SOR  [0,15] (*OBJ_SENSORS*) (**)  XIC  [1,0] (*SimulateINObjectSensor*) (**)  JMP [2,0] (*ULTRA_SENSORS*) (**)
+EOR [3,0]
+
+
+(*Object Sensor  1*)
+
+SOR  [0,17] (**) (**)  XIC  [1,0] (*_IO_EM_DI_18*) (**)  OTE  [2,0] (*Object_Sensor_A1*) (**)
+EOR [3,0]
+
+
+(*Object Sensor  1*)
+
+SOR  [0,19] (**) (**)  XIC  [1,0] (*_IO_EM_DI_19*) (**)  OTE  [2,0] (*Object_Sensor_A2*) (**)
+EOR [3,0]
+
+
+(*Object Sensor  1*)
+
+SOR  [0,21] (**) (**)  XIC  [1,0] (*_IO_EM_DI_17*) (**)  OTE  [2,0] (*Object_Sensor_B1*) (**)
+EOR [3,0]
+
+
+(**)
+
+SOR  [0,23] (*ULTRA_SENSORS*) (**)  XIC  [1,0] (*SimulateINUltraSensor*) (**)  RET [2,0]
+EOR [3,0]
+
+
+(**)
+
+SOR  [0,25] (**) (**)  FB  [1,0] (*1 gain*) (*1*) ( (*EN:EN*)(**) (**)  , (*i1:*)(*_IO_P5_AI_00*) (**) ; (*ENO:ENO*)(**) (**)  , (*o1:*)(*Ultra_Sensor_B2*) (**) )
+EOR [4,0]
+
+
+(**)
+
+SOR  [0,28] (**) (**)  FB  [1,0] (*1 gain*) (*1*) ( (*EN:EN*)(**) (**)  , (*i1:*)(*_IO_P5_AI_01*) (**) ; (*ENO:ENO*)(**) (**)  , (*o1:*)(*Ultra_Sensor_B1*) (**) )
+EOR [4,0]
+EOF
+#end_info
+#info= ID_MAX
+NextId=1
+#end_info
+END_PROGRAM

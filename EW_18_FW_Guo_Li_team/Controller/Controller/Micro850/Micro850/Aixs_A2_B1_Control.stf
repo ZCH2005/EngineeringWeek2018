@@ -1,0 +1,186 @@
+PROGRAM Aixs_A2_B1_Control
+
+IF L_DontRun THEN 
+	RETURN;
+END_IF;
+
+L_ExeCount := L_ExeCount + 1;
+
+
+
+IF __SYSVA_FIRST_SCAN THEN 
+	(* First scan 
+	   - Shall power up the axis 
+	*)
+	L_Axis_action_todo := AXIS_CMD_POWERUP;
+	
+	L_Axis_Execute := TRUE;
+	L_Axis_ena := FALSE;
+	L_Axis_error :=  FALSE;
+	L_Axis_error_id := 0;
+	L_Axis_Velo := 0.0;
+
+	L_PWM_Duty_cyle := DUTYCYCLE_DEFAULT;
+	L_Axis_Accl := ACCL_MAX;
+	L_Axis_Jerk := ACCL_MAX;
+	L_Axis_Deccl := ACCL_MAX;
+	
+	L_ExeCount := 0;
+	
+	(*Axis_A2_B1.AxisState *)
+	
+ELSE
+
+	
+	IF L_Axis_action_todo = AXIS_CMD_NONE THEN
+	(* Nothing to do, Check if there is any change oin speed or frequency  *)
+	
+		IF Axis_A2_B1_Velo <> L_Axis_Velo THEN
+			L_Axis_Velo := Axis_A2_B1_Velo;
+			L_Axis_Execute := TRUE;
+			L_Axis_action_todo := AXIS_CMD_MOVE;
+		ELSIF Axis_A2_B1_Duty_Cycle <> L_PWM_Duty_cyle THEN
+			L_PWM_Duty_cyle := Axis_A2_B1_Duty_Cycle;
+			L_Axis_action_todo := AXIS_CMD_CHANGE_SPEED;		
+		END_IF;
+	
+
+		IF NOT L_Axis_UnitTesing THEN 
+		
+		
+		ELSE
+		    (* Unit test in progress *) 
+			IF L_Axis_cmd_unit_test <> AXIS_CMD_NONE THEN 
+			
+				IF L_Axis_error = FALSE  THEN
+					L_Axis_action_todo := L_Axis_cmd_unit_test;
+					L_Axis_cmd_unit_test := 0;
+				ELSIF L_Axis_cmd_unit_test = AXIS_CMD_RESET THEN
+					(* Shoud we celar the error flag from here ?
+						I think so *)
+					L_Axis_error := FALSE;
+					L_Axis_error_id := 0;
+					L_Axis_action_todo := AXIS_CMD_RESET;
+					L_Axis_cmd_unit_test := 0;
+				END_IF;
+				
+			END_IF;
+		END_IF;
+	END_IF;	
+END_IF;
+
+
+
+
+CASE L_Axis_action_todo OF
+
+	AXIS_CMD_POWERUP:
+	
+		L_Axis_ena := TRUE;
+		
+		L_AXIS_POWER(Axis_A2_B1,L_Axis_ena,TRUE,TRUE);
+		
+	
+		IF L_AXIS_POWER.Status THEN
+		(* POwer up is done *)
+			L_Axis_status := L_AXIS_POWER.Status;
+			L_Axis_error := L_AXIS_POWER.Error;
+	    	L_Axis_error_id := L_AXIS_POWER.ErrorID;				
+			
+			
+			IF L_Axis_error THEN 
+				(* Something went wrong dude 
+					- Cannot do anything since the powerup itself failed 
+					- Shall act based on error id.
+					- For now, I am assuming that this error wont happen
+					
+					Axis_A1_B2_action_todo := AXIS_CMD_RESET;
+					*)
+								
+			ELSE
+				L_Axis_action_todo := AXIS_CMD_NONE;
+			END_IF;
+			
+		END_IF; 
+	
+	AXIS_CMD_CHANGE_SPEED:
+	
+		IF L_Update_Duty_Cylce THEN
+			L_Update_Duty_Cylce := FALSE;
+		ELSE
+			L_Update_Duty_Cylce := TRUE;
+		END_IF;		
+		
+		L_AXIS_SET_PARAM(Axis_A2_B1,L_Update_Duty_Cylce ,1005,L_PWM_Duty_cyle,0);
+
+		IF L_AXIS_SET_PARAM.Error THEN
+			L_Axis_error := L_AXIS_SET_PARAM.Error;
+    		L_Axis_error_id := L_AXIS_SET_PARAM.ErrorID;	
+			
+			L_Axis_action_todo := AXIS_CMD_STOP;
+		ELSIF L_AXIS_SET_PARAM.Done THEN
+			L_Axis_action_todo := AXIS_CMD_NONE;
+		END_IF;		
+	
+	AXIS_CMD_HALT:
+		
+	
+	AXIS_CMD_MOVE:
+		
+				
+		L_AXIS_MOVE(Axis_A2_B1,	L_Axis_Execute ,L_Axis_Velo,L_Axis_Accl,L_Axis_Deccl,L_Axis_Jerk,1,0);	
+		
+		IF L_AXIS_MOVE.Error THEN
+			L_Axis_error := L_AXIS_MOVE.Error;
+    		L_Axis_error_id := L_AXIS_MOVE.ErrorID;				
+		
+			(* L_Axis_action_todo := AXIS_CMD_RESET; *)
+		
+		ELSIF L_AXIS_MOVE.InVelocity = TRUE THEN
+			L_Axis_action_todo := AXIS_CMD_NONE;	
+			(* make it ready to accept new veocity *)
+			L_Axis_Execute := FALSE;
+			L_AXIS_MOVE(Axis_A2_B1,	L_Axis_Execute,L_Axis_Velo,L_Axis_Accl,L_Axis_Deccl,L_Axis_Jerk,1,0);	
+		END_IF;
+
+		IF L_Update_Duty_Cylce THEN
+			L_Update_Duty_Cylce := FALSE;
+		ELSE
+			L_Update_Duty_Cylce := TRUE;
+		END_IF;		
+		
+		L_AXIS_SET_PARAM(Axis_A2_B1,L_Update_Duty_Cylce ,1005,L_PWM_Duty_cyle,0);
+
+		IF L_AXIS_SET_PARAM.Error THEN
+			L_Axis_error := L_AXIS_SET_PARAM.Error;
+    		L_Axis_error_id := L_AXIS_SET_PARAM.ErrorID;	
+			
+			L_Axis_action_todo := AXIS_CMD_STOP;
+		END_IF;		
+		
+	AXIS_CMD_RESET:
+	
+		L_AXIS_RESET(Axis_A2_B1,TRUE);
+		
+		IF L_AXIS_RESET.Done THEN
+			IF L_AXIS_RESET.Error THEN
+				L_Axis_error := L_AXIS_RESET.Error;
+	    		L_Axis_error_id := L_AXIS_RESET.ErrorID;	
+				
+				
+				(* I am panic. Don't know what to do .
+				 	- I was trying to recover - but error again. errrrrrrr
+					- Heeeeeellllllp *) 
+				L_Axis_action_todo := AXIS_CMD_NONE;
+			ELSE
+				L_Axis_action_todo := AXIS_CMD_NONE;
+			END_IF;
+		END_IF;
+		
+	AXIS_CMD_STOP:
+	
+	AXIS_CMD_NONE:
+		(* Nothing to do *)
+	
+END_CASE;
+END_PROGRAM

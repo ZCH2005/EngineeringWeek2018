@@ -1,0 +1,255 @@
+PROGRAM Robot_Action
+(*
+	** Below given are the wheel standard movements. 
+	Any robot movement can be achiened using the prpoer combination of the below **
+
+	[ B1 Move forward ]      [ B1 Move backward ]
+	B1_Ctrl_Pin1 := TRUE;    B1_Ctrl_Pin1 := FALSE;
+	B1_Ctrl_Pin2 := FALSE;	 B1_Ctrl_Pin2 := TRUE;	
+	
+	[ B2 Move forward ]	     [ B2 Move Backward ]
+	B2_Ctrl_Pin1 := TRUE;    B2_Ctrl_Pin1 := FALSE;
+	B2_Ctrl_Pin2 := FALSE;	 B2_Ctrl_Pin2 := TRUE;
+	
+	[ A1 Move right ]		 [ A1 Move  left ]
+	A1_Ctrl_Pin1 := FALSE;   A1_Ctrl_Pin1 := TRUE;
+	A1_Ctrl_Pin2 := TRUE;    A1_Ctrl_Pin2 := FALSE;
+
+	* A2 Move right ]		 [ A2 Move left ]
+	A2_Ctrl_Pin1 := FALSE;   A2_Ctrl_Pin1 := TRUE;
+	A2_Ctrl_Pin2 := TRUE;    A2_Ctrl_Pin2 := FALSE;
+
+	[ STOP ]				 [ STOP ]
+	XX_Ctrl_Pin1 := TRUE;	 XX_Ctrl_Pin1 := FALSE;
+	XX_Ctrl_Pin2 := TRUE;    XX_Ctrl_Pin1 := FALSE;
+
+*)
+
+
+CASE CommandedActionForRobot OF
+
+ACTION_STOP:
+
+	(* STOP and take rest *)
+
+	A1_Ctrl_Pin1 := TRUE;
+	A1_Ctrl_Pin2 := TRUE;
+	
+	A2_Ctrl_Pin1 := TRUE;
+	A2_Ctrl_Pin2 := TRUE;
+	
+	B1_Ctrl_Pin1 := TRUE;
+	B1_Ctrl_Pin2 := TRUE;
+	
+	B2_Ctrl_Pin1 := TRUE;
+	B2_Ctrl_Pin2 := TRUE;
+
+	
+ACTION_HOLD: 
+	(* Hold it there - may be you are on the edge *)
+	A1_Ctrl_Pin1 := FALSE;
+	A1_Ctrl_Pin2 := FALSE;
+	
+	A2_Ctrl_Pin1 := FALSE;
+	A2_Ctrl_Pin2 := FALSE;
+	
+	B1_Ctrl_Pin1 := FALSE;
+	B1_Ctrl_Pin2 := FALSE;	
+	
+	
+	B2_Ctrl_Pin1 := FALSE;
+	B2_Ctrl_Pin2 := FALSE;
+	
+ACTION_MOVE_FORWARD:
+	(* hey go forward*)
+	
+	A1_Ctrl_Pin1 := FALSE;
+	A1_Ctrl_Pin2 := FALSE;
+	
+	A2_Ctrl_Pin1 := FALSE;
+	A2_Ctrl_Pin2 := FALSE;
+	
+	
+	B1_Ctrl_Pin1 := TRUE;
+	B1_Ctrl_Pin2 := FALSE;	
+	
+	B2_Ctrl_Pin1 := TRUE;
+	B2_Ctrl_Pin2 := FALSE;
+
+ACTION_MOVE_BACKWARD:
+	(* champ, go bak*)	
+	
+	A1_Ctrl_Pin1 := FALSE;
+	A1_Ctrl_Pin2 := FALSE;
+	
+	A2_Ctrl_Pin1 := FALSE;
+	A2_Ctrl_Pin2 := FALSE;
+	
+	
+	B1_Ctrl_Pin1 := FALSE;
+	B1_Ctrl_Pin2 := TRUE;	
+	
+	B2_Ctrl_Pin1 := FALSE;
+	B2_Ctrl_Pin2 := TRUE;
+	
+	
+ACTION_MOVE_LEFT:
+
+	A1_Ctrl_Pin1 := TRUE;
+	A1_Ctrl_Pin2 := FALSE;
+	
+	A2_Ctrl_Pin1 := TRUE;
+	A2_Ctrl_Pin2 := FALSE;
+	
+	
+	B1_Ctrl_Pin1 := FALSE;
+	B1_Ctrl_Pin2 := FALSE;	
+	
+	B2_Ctrl_Pin1 := FALSE;
+	B2_Ctrl_Pin2 := FALSE;
+	
+	(* Go to the left dude *)
+	
+ACTION_MOVE_RIGHT:
+	(* Dude, trun right *)
+	
+	A1_Ctrl_Pin1 := FALSE;
+	A1_Ctrl_Pin2 := TRUE;
+	
+	A2_Ctrl_Pin1 := FALSE;
+	A2_Ctrl_Pin2 := TRUE;
+	
+	
+	B1_Ctrl_Pin1 := FALSE;
+	B1_Ctrl_Pin2 := FALSE;	
+	
+	B2_Ctrl_Pin1 := FALSE;
+	B2_Ctrl_Pin2 := FALSE;
+
+	
+ACTION_ROTATE_LEFT:
+	(* rotate left and keep it going*)
+	
+	(* B1 Move forward *)
+	B1_Ctrl_Pin1 := TRUE;
+	B1_Ctrl_Pin2 := FALSE;	
+	
+	
+	(* B2 Move Backward *)
+	B2_Ctrl_Pin1 := FALSE;
+	B2_Ctrl_Pin2 := TRUE;
+	
+	
+	(* A1 Move right *)
+	A1_Ctrl_Pin1 := FALSE;
+	A1_Ctrl_Pin2 := TRUE;
+	
+	
+	(* A2 Move left *)
+	A2_Ctrl_Pin1 := TRUE;
+	A2_Ctrl_Pin2 := FALSE;
+	
+	
+ACTION_ROTATE_RIGHT:
+	(* Rotate right and keep it going*)
+	(* B1 Move backward *)
+	B1_Ctrl_Pin1 := FALSE;
+	B1_Ctrl_Pin2 := TRUE;	
+	
+	
+	(* B2 Move forward *)
+	B2_Ctrl_Pin1 := TRUE;
+	B2_Ctrl_Pin2 := FALSE;
+	
+	
+	(* A1 Move  left *)
+	A1_Ctrl_Pin1 := TRUE;
+	A1_Ctrl_Pin2 := FALSE;
+	
+	
+	(* A2 Move right *)
+	A2_Ctrl_Pin1 := FALSE;
+	A2_Ctrl_Pin2 := TRUE;	
+
+ACTION_MOVE_FW_RIGHT:
+	(* Move forward right and keep it going*)
+	
+	(* A1 Move right *)	
+	A1_Ctrl_Pin1 := FALSE; 
+	A1_Ctrl_Pin2 := TRUE;  	
+	
+	(* A2 Move right *)
+	A2_Ctrl_Pin1 := FALSE;
+	A2_Ctrl_Pin2 := TRUE; 	
+	
+	(* B1 Move forward *)
+	B1_Ctrl_Pin1 := TRUE;
+	B1_Ctrl_Pin2 := FALSE;	
+	
+	(* B2 Move forward *)	  
+	B2_Ctrl_Pin1 := TRUE; 
+	B2_Ctrl_Pin2 := FALSE;
+		
+ACTION_MOVE_FW_LEFT:
+	
+	(* A1 Move  left *)
+	A1_Ctrl_Pin1 := TRUE;
+	A1_Ctrl_Pin2 := FALSE;
+
+	(* A2 Move left *)
+	A2_Ctrl_Pin1 := TRUE;
+	A2_Ctrl_Pin2 := FALSE;
+	
+	(* B1 Move forward *)
+	B1_Ctrl_Pin1 := TRUE;
+	B1_Ctrl_Pin2 := FALSE;	
+	
+	(* B2 Move forward *)	  
+	B2_Ctrl_Pin1 := TRUE; 
+	B2_Ctrl_Pin2 := FALSE;	
+	
+ACTION_MOVE_BW_RIGHT:
+	(* A1 Move right *)	
+	A1_Ctrl_Pin1 := FALSE; 
+	A1_Ctrl_Pin2 := TRUE;  	
+	
+	(* A2 Move right *)
+	A2_Ctrl_Pin1 := FALSE;
+	A2_Ctrl_Pin2 := TRUE; 
+	
+	(* B1 Move backward *)
+	B1_Ctrl_Pin1 := FALSE;
+	B1_Ctrl_Pin2 := TRUE;		
+	
+	(* B2 Move Backward *)
+	B2_Ctrl_Pin1 := FALSE;
+	B2_Ctrl_Pin2 := TRUE;
+	
+ACTION_MOVE_BW_LEFT:
+	(* A1 Move  left *)
+	A1_Ctrl_Pin1 := TRUE;
+	A1_Ctrl_Pin2 := FALSE;
+
+	(* A2 Move left *)
+	A2_Ctrl_Pin1 := TRUE;
+	A2_Ctrl_Pin2 := FALSE;
+	
+	(* B1 Move backward *)
+	B1_Ctrl_Pin1 := FALSE;
+	B1_Ctrl_Pin2 := TRUE;		
+	
+	(* B2 Move Backward *)
+	B2_Ctrl_Pin1 := FALSE;
+	B2_Ctrl_Pin2 := TRUE;
+
+ACTION_DO_NOTING:
+	
+
+ELSE
+	(* Default Case *)
+
+END_CASE;
+	(* Run command only once - no need to repeat the same  
+	CommandedActionForRobot := ACTION_DO_NOTING;*)
+
+END_PROGRAM

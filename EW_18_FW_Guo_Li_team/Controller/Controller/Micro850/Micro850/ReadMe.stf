@@ -1,0 +1,20 @@
+PROGRAM ReadMe
+(* 
+
+***** Global variables - User Controllable **********
+
+	StopSimulation 	- Matser variable to stop all simulation ( Self resetting variable ) 
+	SimulateIO     	- Variable to start simulating Input and Output
+	SimulateInput	- Variable to start simulating Input only
+	SimulateOutput	- Variable to start simulating Output only
+	SimulateINBoundarySensor	- Variable to start simulating Boundary sensors
+	SimulateINObjectSensor		- Variable to start simulating Object detection sensors
+	SimulateINUltraSensor		- Variable to start simulating Ultrasonic sensors 
+	
+***** Global variables - Internal  **********
+
+	Axis_A1_B2_cmd - Command from Robot to Axis for A1B2  
+	Axis_A2_B1_cmd - Command from Robot to Axis for A2B1  
+
+*)
+END_PROGRAM

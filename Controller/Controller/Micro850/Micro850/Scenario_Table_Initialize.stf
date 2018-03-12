@@ -1,0 +1,165 @@
+PROGRAM Scenario_Table_Initialize
+IF __SYSVA_FIRST_SCAN THEN 
+	
+	L_TableIndex := 0;
+	(* Initilaize Hash table for scenarios *)
+
+	
+	(* SCENARIO START *)
+	// Index - 0
+	Scen_table[L_TableIndex].Id := L_TableIndex;
+	Scen_table[L_TableIndex].Priority := 1;
+	Scen_table[L_TableIndex].Name := 'All sensors not detected';
+		
+		L_ActionIndex :=  0;	
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_DO_NOTING;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := T#10ms;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := 0.0; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := 0.0;
+		
+	Scen_table[L_TableIndex].NumOfActions := L_ActionIndex + 1;
+	L_TableIndex := L_TableIndex + 1;
+	(* SCENARIO END *)		
+	
+
+	(* SCENARIO START *)
+	// Index - 1
+	Scen_table[L_TableIndex].Id := L_TableIndex;
+	Scen_table[L_TableIndex].Priority := 199;
+	Scen_table[L_TableIndex].Name := 'Start Scenario';
+		
+		L_ActionIndex :=  0;	
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_MOVE_BACKWARD;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := T#100ms;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+		
+		L_ActionIndex :=  L_ActionIndex + 1;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_MOVE_RIGHT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := T#700ms;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := 0.0; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := 0.0;	
+
+		L_ActionIndex :=  L_ActionIndex + 1;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_MOVE_FORWARD;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := T#400ms;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := 0.0; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := 0.0;	
+		
+		L_ActionIndex :=  L_ActionIndex + 1;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_HOLD;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := T#1ms;
+		(* Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := 70; *)
+		
+	Scen_table[L_TableIndex].NumOfActions := L_ActionIndex + 1;
+	L_TableIndex := L_TableIndex + 1;
+	(* SCENARIO END *)
+
+	(* SCENARIO START *)
+	// Index - 2
+
+	Scen_table[L_TableIndex].Id := L_TableIndex;
+	Scen_table[L_TableIndex].Priority := 199;
+	Scen_table[L_TableIndex].Name := 'Scenario';
+		
+		L_ActionIndex :=  0;	
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_MOVE_BACKWARD;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := T#100ms;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+		
+		L_ActionIndex :=  L_ActionIndex + 1;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_MOVE_LEFT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := T#700ms;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := 0.0; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := 0.0;	
+
+		L_ActionIndex :=  L_ActionIndex + 1;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_MOVE_FORWARD;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := T#400ms;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := 0.0; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := 0.0;	
+		
+		L_ActionIndex :=  L_ActionIndex + 1;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_HOLD;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := T#1ms;
+		(* Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := 70; *)
+		
+	Scen_table[L_TableIndex].NumOfActions := L_ActionIndex + 1;
+	L_TableIndex := L_TableIndex + 1;
+	(* SCENARIO END *)	
+	
+	(* SCENARIO START *)
+	// Index - 3
+	
+	Scen_table[L_TableIndex].Id := L_TableIndex;
+	Scen_table[L_TableIndex].Priority := 200;
+	Scen_table[L_TableIndex].Name := 'B1 Sensor detected';
+
+		L_ActionIndex :=  0;	
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_MOVE_LEFT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := T#10ms;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+
+	Scen_table[L_TableIndex].NumOfActions := L_ActionIndex + 1;
+	L_TableIndex := L_TableIndex + 1;
+	(* SCENARIO END *)		
+	
+	(* SCENARIO START *)
+	// Index - 4
+	
+	Scen_table[L_TableIndex].Id := L_TableIndex;
+	Scen_table[L_TableIndex].Priority := 200;
+	Scen_table[L_TableIndex].Name := 'B2 Sensor detected';
+
+		L_ActionIndex :=  0;	
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_MOVE_RIGHT;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := T#10ms;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+
+	Scen_table[L_TableIndex].NumOfActions := L_ActionIndex + 1;
+	L_TableIndex := L_TableIndex + 1;
+	(* SCENARIO END *)		
+	
+	(* SCENARIO START *)
+	// Index - 5
+	
+	
+	Scen_table[L_TableIndex].Id := L_TableIndex;
+	Scen_table[L_TableIndex].Priority := 200;
+	Scen_table[L_TableIndex].Name := 'A1 Sensor detected';
+		
+		L_ActionIndex :=  0;	
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_MOVE_FORWARD;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := T#10ms;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+
+	Scen_table[L_TableIndex].NumOfActions := L_ActionIndex + 1;
+	L_TableIndex := L_TableIndex + 1;
+	(* SCENARIO END *)		
+	
+	(* SCENARIO START *)
+	// Index - 6
+	
+	
+	Scen_table[L_TableIndex].Id := L_TableIndex;
+	Scen_table[L_TableIndex].Priority := 200;
+	Scen_table[L_TableIndex].Name := 'A2 Sensor detected';
+		
+		L_ActionIndex :=  0;	
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Action := ACTION_MOVE_BACKWARD;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Duration := T#10ms;
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].Velocity := VELOCITY_MAX; 
+		Scen_table[L_TableIndex].ActionList[L_ActionIndex].DutyCycle := DUTYCYCLE_DEFAULT;
+
+	Scen_table[L_TableIndex].NumOfActions := L_ActionIndex + 1;
+	L_TableIndex := L_TableIndex + 1;
+	(* SCENARIO END *)	
+	
+	
+	(* ADD NEW SCENARIOS BEFORE THIS *)
+END_IF;
+END_PROGRAM

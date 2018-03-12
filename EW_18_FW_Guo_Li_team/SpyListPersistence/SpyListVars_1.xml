@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<SpyListVars_1>
+  <ConfigurationInfo>
+    <SpyListName>Control_Pins</SpyListName>
+    <ConfigFileVersion>3</ConfigFileVersion>
+    <ToolWindowPaneIndex>1</ToolWindowPaneIndex>
+    <DefaultRefreshRateMonitoring>100</DefaultRefreshRateMonitoring>
+  </ConfigurationInfo>
+  <Variable>
+    <FullName>Controller.Micro850.Micro850.A1_Ctrl_Pin1</FullName>
+  </Variable>
+  <Variable>
+    <FullName>Controller.Micro850.Micro850.A1_Ctrl_Pin2</FullName>
+  </Variable>
+  <Variable>
+    <FullName>Controller.Micro850.Micro850.A2_Ctrl_Pin1</FullName>
+  </Variable>
+  <Variable>
+    <FullName>Controller.Micro850.Micro850.A2_Ctrl_Pin2</FullName>
+  </Variable>
+  <Variable>
+    <FullName>Controller.Micro850.Micro850.B1_Ctrl_Pin1</FullName>
+  </Variable>
+  <Variable>
+    <FullName>Controller.Micro850.Micro850.B1_Ctrl_Pin2</FullName>
+  </Variable>
+  <Variable>
+    <FullName>Controller.Micro850.Micro850.B2_Ctrl_Pin1</FullName>
+  </Variable>
+  <Variable>
+    <FullName>Controller.Micro850.Micro850.B2_Ctrl_Pin2</FullName>
+  </Variable>
+  <Variable>
+    <FullName>Controller.Micro850.Micro850.CommandedActionForRobot</FullName>
+  </Variable>
+</SpyListVars_1>

@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<SpyListVars_3>
+  <ConfigurationInfo>
+    <SpyListName>Simulation</SpyListName>
+    <ConfigFileVersion>3</ConfigFileVersion>
+    <ToolWindowPaneIndex>3</ToolWindowPaneIndex>
+    <DefaultRefreshRateMonitoring>500</DefaultRefreshRateMonitoring>
+  </ConfigurationInfo>
+  <Variable>
+    <FullName>Controller.Micro850.Micro850.CommandedActionForRobot</FullName>
+  </Variable>
+  <Variable>
+    <FullName>Controller.Micro850.Micro850.CommandedScenario</FullName>
+  </Variable>
+  <Variable>
+    <FullName>Controller.Micro850.Micro850.StartInputSimulation</FullName>
+  </Variable>
+  <Variable>
+    <FullName>Controller.Micro850.Micro850.StartBoundarySensorSimulation</FullName>
+  </Variable>
+  <Variable>
+    <FullName>Controller.Micro850.Micro850.StartObjSensorSimulation</FullName>
+  </Variable>
+  <Variable>
+    <FullName>Controller.Micro850.Micro850.StartUltraSensorSimulation</FullName>
+  </Variable>
+  <Variable>
+    <FullName>Controller.Micro850.Micro850.SimulateInput</FullName>
+  </Variable>
+  <Variable>
+    <FullName>Controller.Micro850.Micro850.SimulateINObjectSensor</FullName>
+  </Variable>
+  <Variable>
+    <FullName>Controller.Micro850.Micro850.SimulateINBoundarySensor</FullName>
+  </Variable>
+  <Variable>
+    <FullName>Controller.Micro850.Micro850.SimulateINUltraSensor</FullName>
+  </Variable>
+  <Variable>
+    <FullName>Controller.Micro850.Micro850.StateDetection.L_Temp_Sensor_status</FullName>
+  </Variable>
+</SpyListVars_3>

@@ -1,0 +1,149 @@
+PROGRAM Scenario_handling
+
+(* Initialize *)
+IF L_DontRun THEN
+	RETURN;
+
+END_IF;
+
+
+IF __SYSVA_FIRST_SCAN THEN 
+	(* First scan *)
+	Scen_tracker.Status := SCEN_STATUS_FINISHED;
+	Scen_tracker.Action_list_index := 255;
+	Scen_tracker.Sce_Id := INVALID_SCENARIO;
+	
+	Scen_To_Execute := INVALID_SCENARIO;
+	TimerControl := FALSE;
+	TimerTime := T#0s;
+	
+	L_Change_Counter := 0;
+	L_StoppedState_Counter := 0;
+	L_OnGoingState_Counter := 0;
+	L_OnGoingTimerActiveCounter := 0;
+	
+ELSE
+
+
+	IF CommandedScenario <> Scen_To_Execute THEN
+		IF CommandedScenario <> INVALID_SCENARIO THEN
+			(* 
+			We have a new scenario to execute
+		    	- Chekc the priority of the new one 
+				- If higher or equal as existing one , Abort the ongoing ( If any )
+				- else Start the new one 
+			*)		
+			IF Scen_To_Execute <> INVALID_SCENARIO  THEN
+				IF Scen_table[Scen_To_Execute].Priority >  Scen_table[CommandedScenario].Priority THEN
+					// Non prememptable scenario - revert commanded scenario to original one
+					CommandedScenario := Scen_To_Execute;
+				END_IF;
+			END_IF;
+
+			IF CommandedScenario <> Scen_To_Execute THEN
+				TimerControl := FALSE;
+				
+				(* Rest Timer here *)
+				ACTION_TIMER(TimerControl,TimerTime);
+
+				Scen_tracker.Status := SCEN_STATUS_READY;
+				Scen_tracker.Action_list_index := 255;
+				Scen_tracker.Sce_Id := INVALID_SCENARIO;
+				
+				L_Change_Counter := L_Change_Counter + 1;
+				
+				Scen_To_Execute := CommandedScenario;
+			END_IF;
+		END_IF;
+	END_IF;	
+	
+	IF Scen_To_Execute <> INVALID_SCENARIO THEN
+
+		CASE Scen_tracker.Status OF 
+			SCEN_STATUS_READY:
+				(* Start new *)
+				Scen_tracker.Sce_Id := Scen_To_Execute;
+				Scen_tracker.Action_list_index := 0;
+				Scen_tracker.Action_Entry :=  Scen_table[Scen_To_Execute].ActionList[Scen_tracker.Action_list_index];
+
+				TimerTime := Scen_tracker.Action_Entry.Duration;
+				
+				TimerControl := TRUE;
+				ACTION_TIMER(TimerControl,TimerTime);
+				L_Velocity := Scen_table[Scen_To_Execute].ActionList[Scen_tracker.Action_list_index].Velocity;
+				IF L_Velocity <> 0.0 THEN
+					Axis_A1_B2_Velo := L_Velocity;
+					Axis_A2_B1_Velo := L_Velocity;
+				END_IF;
+				
+				L_DutyCycle := Scen_table[Scen_To_Execute].ActionList[Scen_tracker.Action_list_index].DutyCycle;
+				IF L_DutyCycle <> 0.0 THEN
+					Axis_A1_B2_Duty_Cycle := L_DutyCycle;
+					Axis_A2_B1_Duty_Cycle := L_DutyCycle;
+				END_IF;					
+				CommandedActionForRobot := Scen_tracker.Action_Entry.Action;
+				Scen_tracker.Status := SCEN_STATUS_ONGOING;
+				
+				L_StoppedState_Counter := L_StoppedState_Counter + 1;
+			
+			SCEN_STATUS_ONGOING:
+				ACTION_TIMER(TimerControl,TimerTime);
+				
+				L_OnGoingState_Counter := L_OnGoingState_Counter + 1;	
+				
+				IF ACTION_TIMER.Q THEN
+					L_OnGoingTimerActiveCounter := L_OnGoingTimerActiveCounter + 1;
+					(* Timer expired *)
+					TimerControl := FALSE;
+					ACTION_TIMER(TimerControl,TimerTime);
+					
+					(* Get next action to execute *)
+					Scen_tracker.Action_list_index := Scen_tracker.Action_list_index + 1;				
+					IF Scen_tracker.Action_list_index < Scen_table[Scen_To_Execute].NumOfActions THEN
+						(*  Another action available for execution *)
+						Scen_tracker.Action_Entry :=  Scen_table[Scen_To_Execute].ActionList[Scen_tracker.Action_list_index];
+						TimerTime := Scen_tracker.Action_Entry.Duration;
+						TimerControl := TRUE;
+						ACTION_TIMER(TimerControl,TimerTime);
+						
+						L_Velocity := Scen_table[Scen_To_Execute].ActionList[Scen_tracker.Action_list_index].Velocity;
+						IF L_Velocity <> 0.0 THEN
+							Axis_A1_B2_Velo := L_Velocity;
+							Axis_A2_B1_Velo := L_Velocity;
+						END_IF;
+						
+						L_DutyCycle := Scen_table[Scen_To_Execute].ActionList[Scen_tracker.Action_list_index].DutyCycle;
+						IF L_DutyCycle <> 0.0 THEN
+							Axis_A1_B2_Duty_Cycle := L_DutyCycle;
+							Axis_A2_B1_Duty_Cycle := L_DutyCycle;
+						END_IF;						
+						
+						CommandedActionForRobot := Scen_tracker.Action_Entry.Action;
+					ELSE
+						(*  No Action to execute *)
+						Scen_tracker.Status := SCEN_STATUS_FINISHED;
+						Scen_tracker.Action_list_index := 255;
+						Scen_tracker.Sce_Id := INVALID_SCENARIO;
+						
+						
+						IF CommandedScenario = Scen_To_Execute THEN
+							// Clear scenario if there are no new scenrios to execute
+							CommandedScenario := INVALID_SCENARIO;
+						END_IF;
+						Scen_To_Execute := INVALID_SCENARIO;
+						
+						TimerControl := FALSE;
+						ACTION_TIMER(TimerControl,TimerTime);						
+						
+					END_IF;
+				END_IF;
+			SCEN_STATUS_FINISHED:
+
+			SCEN_STATUS_ABORTED:
+		END_CASE;
+
+	END_IF;
+	
+END_IF;
+
+END_PROGRAM
